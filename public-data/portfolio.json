@@ -1,0 +1,1089 @@
+{
+  "schemaSetVersion": "1.0.0",
+  "profile": {
+    "name": "Abhijit Ojha",
+    "role": "Staff Software Engineer",
+    "headline": "I turn complex systems into clear, durable engineering decisions.",
+    "introduction": "Staff Software Engineer with 13+ years of experience building enterprise software across Healthcare, Logistics, Retail, and Product Engineering.",
+    "supportingCopy": "I connect architecture, hands-on delivery, and calm technical leadership to help teams make consequential systems easier to evolve.",
+    "availability": "Open to Staff+ engineering leadership conversations",
+    "location": "Bengaluru, India",
+    "careerHighlights": [
+      "GE HealthCare",
+      "Maersk",
+      "Infosys",
+      "Accenture",
+      "CSM Technologies"
+    ],
+    "valuePillars": [
+      {
+        "eyebrow": "Systems thinking",
+        "title": "Boundaries that hold",
+        "copy": "Clear seams, explicit failure modes, and a path from decision to delivery."
+      },
+      {
+        "eyebrow": "Engineering judgment",
+        "title": "Trade-offs made visible",
+        "copy": "Pragmatic choices balancing reliability, speed, operability, and change."
+      },
+      {
+        "eyebrow": "Technical leadership",
+        "title": "Teams that ship with confidence",
+        "copy": "Hands-on guidance, quality habits, and shared context across disciplines."
+      }
+    ]
+  },
+  "records": [
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-01",
+      "title": "Enterprise Archive",
+      "projectId": "public-project-01",
+      "employer": "GE HealthCare",
+      "domain": "Healthcare imaging",
+      "overview": "Enterprise healthcare imaging archive work supporting mission-critical clinical imaging workflows.",
+      "challenge": "Healthcare systems need reliable ingestion, storage, retrieval, and exchange of imaging studies across enterprise workflows.",
+      "solution": "Designed and delivered archive and imaging capabilities spanning DICOM workflows, PACS integration, APIs, cloud services, and enterprise data storage.",
+      "architecture": "The architecture includes DICOM producers and consumers, archive services, PACS integrations, REST APIs, messaging, databases, and AWS-hosted capabilities. The architecture is presented as a high-level flow.",
+      "role": "Staff Software Engineer",
+      "dates": "December 2019 - Present",
+      "responsibilities": [
+        "Own architecture, design, implementation, delivery, and cross-team coordination.",
+        "Lead technical reviews and mentor engineers working on archive capabilities.",
+        "Improve backend performance, quality, maintainability, and test coverage."
+      ],
+      "technologies": [
+        ".NET Core",
+        "C#",
+        "Angular",
+        "AWS",
+        "DICOM",
+        "PACS",
+        "RabbitMQ",
+        "SQL Server",
+        "REST APIs",
+        "Docker",
+        "Microservices"
+      ],
+      "impact": [
+        "Supports enterprise medical-imaging workflows.",
+        "Strengthened engineering quality through automated testing and regression prevention."
+      ],
+      "decisions": [
+        "Use service and API boundaries for independently evolving capabilities.",
+        "Use automated backend testing as a release-quality control."
+      ],
+      "lessons": [],
+      "references": [
+        "https://www.dicomstandard.org/current/",
+        "https://www.rabbitmq.com/docs"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-02",
+      "title": "PACS Prefetch",
+      "projectId": "public-project-02",
+      "employer": "GE HealthCare",
+      "domain": "Healthcare imaging",
+      "overview": "Prefetch capability for making relevant PACS imaging studies available to downstream clinical workflows.",
+      "challenge": "Clinical imaging consumers need prior or relevant studies available with dependable retrieval behavior and high availability.",
+      "solution": "Owned the feature and applied PACS domain expertise to the retrieval workflow, performance, and operational behavior.",
+      "architecture": "A retrieval workflow connects study selection and request handling with PACS/archive access and downstream availability.",
+      "role": "Staff Software Engineer",
+      "dates": "December 2019 - Present",
+      "responsibilities": [
+        "Act as PACS subject-matter expert.",
+        "Own design and implementation.",
+        "Address availability and performance concerns."
+      ],
+      "technologies": [
+        "C#",
+        ".NET",
+        "DICOM",
+        "PACS"
+      ],
+      "impact": [
+        "Improved the dependability of imaging-study availability for consuming workflows."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [
+        "https://www.dicomstandard.org/current/"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-03",
+      "title": "Archive Capacity Expansion",
+      "projectId": "public-project-03",
+      "employer": "GE HealthCare",
+      "domain": "Healthcare imaging",
+      "overview": "Archive-scale enhancement designed to support a larger number of archive instances without destabilizing existing behavior.",
+      "challenge": "The archive platform needed to scale its supported archive count while preserving compatibility and regression safety.",
+      "solution": "Extended archive data store integrations, implemented custom scheduling behavior, and handled C++ conversions required by the feature.",
+      "architecture": "The architecture combines archive configuration and scheduling logic with archive data store access and native-code conversion boundaries.",
+      "role": "Staff Software Engineer",
+      "dates": "December 2019 - Present",
+      "responsibilities": [
+        "Design and implement the scale enhancement.",
+        "Develop custom schedulers.",
+        "Handle native C++ conversions.",
+        "Protect existing behavior through regression-focused engineering."
+      ],
+      "technologies": [
+        "C#",
+        ".NET",
+        "C++",
+        "archive data store"
+      ],
+      "impact": [
+        "Expanded archive workflow capacity with dependable retrieval and maintainable operations."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-04",
+      "title": "Imaging Workflow Validation Tool",
+      "projectId": "public-project-04",
+      "employer": "GE HealthCare",
+      "domain": "Healthcare engineering productivity",
+      "overview": "An enterprise engineering engagement focused on dependable delivery.",
+      "challenge": "Manual validation of image ingestion and imaging APIs is repetitive and time-consuming.",
+      "solution": "Built an imaging validation harness-based WPF tool that exercises imaging flows and uses assisted validation services to assist validation work.",
+      "architecture": "This architecture keeps implementation topology concise and focused.",
+      "role": "Staff Software Engineer",
+      "dates": "December 2019 - Present",
+      "responsibilities": [
+        "Design and implement the WPF validation workflow.",
+        "Integrate imaging simulators and APIs.",
+        "Apply AI assistance to reduce repetitive engineering work."
+      ],
+      "technologies": [
+        "C#",
+        ".NET",
+        "WPF",
+        "imaging validation harness",
+        "WADO",
+        "imaging management API",
+        "assisted validation services"
+      ],
+      "impact": [
+        "Streamlined imaging validation with repeatable checks and clearer quality signals."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [
+        "https://learn.microsoft.com/dotnet/"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-05",
+      "title": "Employee Feedback Tracking Tool",
+      "projectId": "public-project-05",
+      "employer": "GE HealthCare",
+      "domain": "Enterprise engineering",
+      "overview": "An enterprise engineering engagement focused on dependable delivery.",
+      "challenge": "Teams needed a lightweight way to capture and follow feedback information.",
+      "solution": "Developed an Express.js-based tracking application.",
+      "architecture": "This work demonstrates an Express.js application with concise persistence, authentication, deployment, and UI boundaries.",
+      "role": "Staff Software Engineer",
+      "dates": "December 2019 - Present",
+      "responsibilities": [
+        "Implement the tracking workflow and supporting application behavior."
+      ],
+      "technologies": [
+        "Express.js",
+        "JavaScript"
+      ],
+      "impact": [
+        "Provided a dedicated workflow for employee feedback tracking."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-06",
+      "title": "Service Boundary Modernization",
+      "projectId": "public-project-06",
+      "employer": "Enterprise engineering engagement",
+      "domain": "Enterprise modernization",
+      "overview": "Modernization work involving migration of legacy capabilities toward microservices and improved engineering workflows.",
+      "challenge": "Legacy application boundaries can constrain deployment, maintainability, and independent evolution.",
+      "solution": "This work demonstrates microservices migration and developer-assistance tooling-assisted engineering, but keeps employer context general.",
+      "architecture": "Target architecture uses decomposed services and independent delivery boundaries; the architecture is presented as a high-level flow.",
+      "role": "Architecture and engineering contribution",
+      "dates": "Project preview",
+      "responsibilities": [
+        "Contribute architecture and implementation work.",
+        "Use developer-assistance tooling for documentation and SQL-related development tasks."
+      ],
+      "technologies": [
+        "Microservices",
+        "C#",
+        ".NET",
+        "developer-assistance tooling",
+        "CI/CD"
+      ],
+      "impact": [
+        "Clarified service boundaries to make modernization easier to evolve and operate."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [
+        "https://learn.microsoft.com/dotnet/"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-07",
+      "title": "Enterprise Automation Framework",
+      "projectId": "public-project-07",
+      "employer": "Maersk",
+      "domain": "Logistics automation",
+      "overview": "Enterprise automation framework spanning Windows, web, SAP, and mainframe workflows.",
+      "challenge": "Operational processes crossed several application types and required repeatable automation rather than isolated scripts.",
+      "solution": "Built a shared RPA and .NET framework to automate workflows across heterogeneous enterprise systems.",
+      "architecture": "A .NET/WPF control layer coordinates automation adapters for Windows, web, SAP, and mainframe systems, with SQL Server supporting application data. The architecture is presented as a high-level flow.",
+      "role": "Senior Software Developer",
+      "dates": "July 2018 - October 2019",
+      "responsibilities": [
+        "Develop framework capabilities and workflow integrations.",
+        "Support maintainable automation across multiple target system types."
+      ],
+      "technologies": [
+        "C#",
+        ".NET",
+        "WPF",
+        "SQL Server",
+        "RPA",
+        "SAP",
+        "Mainframe"
+      ],
+      "impact": [
+        "Created a common engineering foundation for cross-platform enterprise automation."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [
+        "https://learn.microsoft.com/dotnet/"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-08",
+      "title": "Booking Workflow Optimization",
+      "projectId": "public-project-08",
+      "employer": "Maersk",
+      "domain": "Logistics",
+      "overview": "Performance work for booking workflows.",
+      "challenge": "Booking operations depended on data collection and processing paths that required performance improvement.",
+      "solution": "Optimized the application and data-scraping flow to improve operational responsiveness.",
+      "architecture": "This work demonstrates enterprise operations, booking data workflow data scraping, and performance optimization with concise component and data-flow details.",
+      "role": "Senior Software Developer",
+      "dates": "July 2018 - October 2019",
+      "responsibilities": [
+        "Analyze bottlenecks and implement performance improvements."
+      ],
+      "technologies": [
+        "C#",
+        ".NET"
+      ],
+      "impact": [
+        "Improved booking workflow reliability through focused performance and maintainability work."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-09",
+      "title": "Commodity Management Portal",
+      "projectId": "public-project-09",
+      "employer": "Infosys",
+      "domain": "Commodity and energy trading",
+      "overview": "Portal supporting commodity operations workflows and counterparties.",
+      "challenge": "Commodity-management users needed application support for trading-related workflows and financial calculations.",
+      "solution": "Developed portal capabilities and unit tests for complex financial algorithms integrated with enterprise trading systems.",
+      "architecture": "A C# application connects business workflows and tested calculation logic with Oracle and enterprise trading integrations.",
+      "role": "Technology Analyst",
+      "dates": "November 2015 - December 2017",
+      "responsibilities": [
+        "Develop application features.",
+        "Create unit tests for complex financial algorithms.",
+        "Support enterprise trading-system integration."
+      ],
+      "technologies": [
+        "C#",
+        "Oracle",
+        "enterprise trading integration",
+        "Windows Forms"
+      ],
+      "impact": [
+        "Improved testability and delivery confidence for complex financial calculations."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-10",
+      "title": "Automated Demand Response",
+      "projectId": "public-project-10",
+      "employer": "Infosys",
+      "domain": "Energy",
+      "overview": "Application supporting electricity-demand and future-bid workflows.",
+      "challenge": "Energy stakeholders needed software to work with electricity-demand information and future bids.",
+      "solution": "Delivered application features and data access across web and desktop UI technologies.",
+      "architecture": "ASP.NET and WPF presentation layers use C# and Entity Framework to work with Oracle 11g data. The architecture is presented as a high-level flow.",
+      "role": "Technology Analyst",
+      "dates": "November 2015 - December 2017",
+      "responsibilities": [
+        "Analyze requirements.",
+        "Develop application and persistence capabilities.",
+        "Support testing and delivery."
+      ],
+      "technologies": [
+        "ASP.NET 4.0",
+        "C#",
+        "Oracle 11g",
+        "WPF",
+        "Entity Framework"
+      ],
+      "impact": [
+        "Supported demand-response and bidding workflows."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-11",
+      "title": "Track Layout",
+      "projectId": "public-project-11",
+      "employer": "Infosys",
+      "domain": "Industrial automation",
+      "overview": "Windows application for validating conveyor motor configurations and generating configuration output files.",
+      "challenge": "Industrial track layouts required validation of motor configurations and reliable generation of downstream configuration files.",
+      "solution": "Built validation and generation workflows in a C# Windows Forms application.",
+      "architecture": "A desktop application models layout inputs, applies motor/configuration validation, and emits configuration output files for downstream use.",
+      "role": "Technology Analyst",
+      "dates": "November 2015 - December 2017",
+      "responsibilities": [
+        "Implement validation rules.",
+        "Generate configuration output output files.",
+        "Support industrial component configuration workflows."
+      ],
+      "technologies": [
+        "C#",
+        "Windows Forms",
+        "industrial motion system"
+      ],
+      "impact": [
+        "Automated configuration validation and file generation for track-layout workflows."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-12",
+      "title": "Capacity Planning Platform",
+      "projectId": "public-project-12",
+      "employer": "Accenture",
+      "domain": "Enterprise capacity planning",
+      "overview": "Capacity-planning platform covering locations, resources, seats, projects, and stakeholders.",
+      "challenge": "Enterprise teams needed a unified system for planning physical and human capacity across organizational dimensions.",
+      "solution": "Implemented web application and service capabilities for capacity-planning workflows.",
+      "architecture": "An ASP.NET application uses C# business logic, WCF service boundaries, and SQL Server 2008 persistence.",
+      "role": "Software Engineer",
+      "dates": "April 2015 - October 2015",
+      "responsibilities": [
+        "Develop features and service integrations.",
+        "Implement database-backed planning workflows."
+      ],
+      "technologies": [
+        "ASP.NET 4.0",
+        "C#",
+        "SQL Server 2008",
+        "WCF"
+      ],
+      "impact": [
+        "Centralized capacity-planning workflows across locations, resources, seats, projects, and stakeholders."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-13",
+      "title": "Procurement Approval Workflow",
+      "projectId": "public-project-13",
+      "employer": "CSM Technologies",
+      "domain": "Public-sector procurement",
+      "overview": "Role-based procurement approval platform for enterprise operations.",
+      "challenge": "Procurement approvals required controlled access and documented workflows across user roles.",
+      "solution": "Contributed requirements and design documentation and developed a role-rights-based approval application.",
+      "architecture": "An ASP.NET/C# application uses WCF services and SQL Server 2012, with jQuery and JavaScript in the web layer.",
+      "role": "Software Developer",
+      "dates": "June 2012 - April 2015",
+      "responsibilities": [
+        "Contribute HLD, LLD, and SRS artifacts.",
+        "Implement role-rights and procurement-approval features.",
+        "Collaborate within a cross-functional team."
+      ],
+      "technologies": [
+        "ASP.NET 4.0",
+        "C#",
+        "SQL Server 2012",
+        "WCF",
+        "jQuery",
+        "JavaScript",
+        "Visual Studio 2010",
+        "SSMS 2012"
+      ],
+      "impact": [
+        "Digitized role-controlled procurement approval workflows."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-14",
+      "title": "Legacy Logic Modernization",
+      "projectId": "public-project-14",
+      "employer": "CSM Technologies",
+      "domain": "Power and legacy modernization",
+      "overview": "Legacy modernization engagement for utility operations.",
+      "challenge": "Existing legacy logic behavior needed to be understood and represented in database procedures while preserving completeness.",
+      "solution": "Analyzed legacy logic, supported database procedures rewriting, documented behavior, and reviewed converted scope for completeness.",
+      "architecture": "The modernization flow moves from legacy logic analysis to mapped database procedures behavior, supported by analysis and review artifacts.",
+      "role": "Software Developer",
+      "dates": "June 2012 - April 2015",
+      "responsibilities": [
+        "Analyze legacy logic programs.",
+        "Support database procedures rewrite and documentation.",
+        "Review converted functionality for completeness within a cross-functional team."
+      ],
+      "technologies": [
+        "legacy logic",
+        "database procedures",
+        "Oracle SQL Developer",
+        "FreeMind"
+      ],
+      "impact": [
+        "Supported controlled modernization of legacy power-sector logic."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-15",
+      "title": "Public Asset Records Workflow",
+      "projectId": "public-project-15",
+      "employer": "CSM Technologies",
+      "domain": "Public-sector compliance",
+      "overview": "Application for recording assets associated with government employees and political appointees for public-sector asset workflow.",
+      "challenge": "The stakeholders needed structured collection and management of asset information for covered individuals.",
+      "solution": "Contributed requirements, SRS, SOA design, WCF services, and application implementation.",
+      "architecture": "An ASP.NET 3.5 application uses C#, WCF/SOA service boundaries, SQL Server 2008, jQuery, and JavaScript.",
+      "role": "Software Developer",
+      "dates": "June 2012 - April 2015",
+      "responsibilities": [
+        "Gather and analyze requirements.",
+        "Produce SRS artifacts.",
+        "Contribute SOA/WCF design and implementation within a cross-functional team."
+      ],
+      "technologies": [
+        "ASP.NET 3.5",
+        "C#",
+        "SQL Server 2008",
+        "WCF",
+        "SOA",
+        "jQuery",
+        "JavaScript"
+      ],
+      "impact": [
+        "Provided a structured digital workflow for public asset records."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-16",
+      "title": "Government Service Data Access",
+      "projectId": "public-project-16",
+      "employer": "CSM Technologies",
+      "domain": "Public sector",
+      "overview": "public-sector services application engagement focused on persistence and production support.",
+      "challenge": "The system required reliable data-access behavior and production support.",
+      "solution": "Implemented DAL/persistence work and supported production issues.",
+      "architecture": "An ASP.NET/VB.NET application uses a SQL Server 2008 data layer with jQuery and JavaScript in the UI.",
+      "role": "Software Developer",
+      "dates": "June 2012 - April 2015",
+      "responsibilities": [
+        "Implement data-access and persistence capabilities.",
+        "Provide production support within a cross-functional team."
+      ],
+      "technologies": [
+        "ASP.NET",
+        "VB.NET",
+        "SQL Server 2008",
+        "jQuery",
+        "JavaScript"
+      ],
+      "impact": [
+        "Improved and supported production data-access workflows."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-17",
+      "title": "Utility Grievance and Reporting Platform",
+      "projectId": "public-project-17",
+      "employer": "CSM Technologies",
+      "domain": "Power and citizen services",
+      "overview": "Platform for enterprise operations supporting grievances, MIS, mobile, and payment services.",
+      "challenge": "Power-distribution stakeholders needed digital grievance handling, reporting, mobile access, and payment integrations.",
+      "solution": "Developed web application and web-service capabilities for the related workflows.",
+      "architecture": "An ASP.NET/VB.NET application uses SQL Server 2005, jQuery, JavaScript, and service integrations for mobile and payment workflows.",
+      "role": "Software Developer",
+      "dates": "June 2012 - April 2015",
+      "responsibilities": [
+        "Develop grievance and MIS capabilities.",
+        "Implement mobile and payment web-service integrations within a cross-functional team."
+      ],
+      "technologies": [
+        "ASP.NET",
+        "VB.NET",
+        "SQL Server 2005",
+        "jQuery",
+        "JavaScript",
+        "Web Services"
+      ],
+      "impact": [
+        "Enabled digital grievance, reporting, mobile, and payment-related workflows for power-distribution organizations."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-18",
+      "title": "Education Monitoring and Reporting Platform",
+      "projectId": "public-project-18",
+      "employer": "CSM Technologies",
+      "domain": "Education",
+      "overview": "Education monitoring platform for SSA/enterprise operations covering schools, teachers, children, and yearly reporting.",
+      "challenge": "Education administrators needed consolidated monitoring and annual reporting across core school-system entities.",
+      "solution": "Developed web workflows, reports, and ADO.NET-based data access.",
+      "architecture": "An ASP.NET/VB.NET application uses SQL Server 2008 and ADO.NET DataAdapter, DataSet, and DataReader patterns, with jQuery in the UI.",
+      "role": "Software Developer",
+      "dates": "June 2012 - April 2015",
+      "responsibilities": [
+        "Develop monitoring and reporting capabilities.",
+        "Implement data access using multiple ADO.NET patterns within a cross-functional team."
+      ],
+      "technologies": [
+        "ASP.NET",
+        "VB.NET",
+        "SQL Server 2008",
+        "jQuery",
+        "ADO.NET",
+        "DataAdapter",
+        "DataSet",
+        "DataReader"
+      ],
+      "impact": [
+        "Supported consolidated monitoring of schools, teachers, children, and annual education reports."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "architecture",
+      "id": "public-architecture-01",
+      "title": "Enterprise Archive",
+      "scenario": "Reliable imaging exchange",
+      "summary": "A guided view of a documented imaging flow, from protocol boundary through durable archive services to downstream availability.",
+      "nodes": [
+        {
+          "id": "producer",
+          "label": "Imaging producer",
+          "purpose": "Create or submit an imaging study.",
+          "responsibilities": [
+            "Study creation",
+            "Transfer initiation"
+          ],
+          "tradeoffs": [
+            "External behavior varies"
+          ],
+          "whySelected": "Keeps the external boundary explicit.",
+          "technologies": [
+            "DICOM"
+          ],
+          "relatedProjects": [
+            "public-project-01",
+            "public-project-02"
+          ],
+          "relatedDecisions": [
+            "public-decision-01"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        },
+        {
+          "id": "router",
+          "label": "Protocol router",
+          "purpose": "Validate and route imaging data into archive workflows.",
+          "responsibilities": [
+            "Validation",
+            "Routing"
+          ],
+          "tradeoffs": [
+            "Adds a boundary to operate"
+          ],
+          "whySelected": "Protects the core workflow from protocol variance.",
+          "technologies": [
+            "DICOM",
+            "REST APIs"
+          ],
+          "relatedProjects": [
+            "public-project-01"
+          ],
+          "relatedDecisions": [
+            "public-decision-01"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        },
+        {
+          "id": "archive",
+          "label": "Archive services",
+          "purpose": "Coordinate durable storage, retrieval, and availability.",
+          "responsibilities": [
+            "Workflow orchestration",
+            "Availability"
+          ],
+          "tradeoffs": [
+            "Requires clear failure handling"
+          ],
+          "whySelected": "Centralizes the domain responsibility without exposing implementation details.",
+          "technologies": [
+            "C#",
+            ".NET",
+            "SQL Server"
+          ],
+          "relatedProjects": [
+            "public-project-01",
+            "public-project-03"
+          ],
+          "relatedDecisions": [
+            "public-decision-02"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        },
+        {
+          "id": "consumer",
+          "label": "Clinical consumer",
+          "purpose": "Make a study available to a consuming workflow.",
+          "responsibilities": [
+            "Retrieval",
+            "Downstream hand-off"
+          ],
+          "tradeoffs": [
+            "Depends on availability contracts"
+          ],
+          "whySelected": "Makes the user-facing outcome visible.",
+          "technologies": [
+            "REST APIs",
+            "PACS"
+          ],
+          "relatedProjects": [
+            "public-project-02"
+          ],
+          "relatedDecisions": [
+            "public-decision-03"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        }
+      ],
+      "edges": [
+        [
+          "producer",
+          "router"
+        ],
+        [
+          "router",
+          "archive"
+        ],
+        [
+          "archive",
+          "consumer"
+        ]
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "architecture",
+      "id": "public-architecture-02",
+      "title": "Distributed Messaging",
+      "scenario": "Resilient asynchronous workflow",
+      "summary": "A concise reference flow showing how explicit messages, retries, and terminal-failure paths keep services decoupled.",
+      "nodes": [
+        {
+          "id": "api",
+          "label": "API boundary",
+          "purpose": "Accept a command and acknowledge intent.",
+          "responsibilities": [
+            "Validation",
+            "Command acceptance"
+          ],
+          "tradeoffs": [
+            "Acknowledgement is not completion"
+          ],
+          "whySelected": "Separates request handling from long-running work.",
+          "technologies": [
+            "REST APIs"
+          ],
+          "relatedProjects": [
+            "public-project-01",
+            "public-project-07"
+          ],
+          "relatedDecisions": [
+            "public-decision-01"
+          ],
+          "relatedNotes": [
+            "public-note-02"
+          ]
+        },
+        {
+          "id": "broker",
+          "label": "Message broker",
+          "purpose": "Distribute work reliably between services.",
+          "responsibilities": [
+            "Queue isolation",
+            "Retry handling"
+          ],
+          "tradeoffs": [
+            "Adds operational complexity",
+            "Eventual consistency"
+          ],
+          "whySelected": "Provides a clear buffer for asynchronous workloads.",
+          "technologies": [
+            "RabbitMQ",
+            "Retry policies"
+          ],
+          "relatedProjects": [
+            "public-project-01"
+          ],
+          "relatedDecisions": [
+            "public-decision-01"
+          ],
+          "relatedNotes": [
+            "public-note-02"
+          ]
+        },
+        {
+          "id": "worker",
+          "label": "Workflow worker",
+          "purpose": "Perform the domain operation and report outcome.",
+          "responsibilities": [
+            "Work execution",
+            "Failure classification"
+          ],
+          "tradeoffs": [
+            "Requires idempotency"
+          ],
+          "whySelected": "Keeps domain behavior independently deployable.",
+          "technologies": [
+            "Microservices",
+            "C#"
+          ],
+          "relatedProjects": [
+            "public-project-01",
+            "public-project-07"
+          ],
+          "relatedDecisions": [
+            "public-decision-02"
+          ],
+          "relatedNotes": [
+            "public-note-02"
+          ]
+        },
+        {
+          "id": "dead-letter",
+          "label": "Terminal-failure queue",
+          "purpose": "Hold work that needs investigation or replay.",
+          "responsibilities": [
+            "Failure visibility",
+            "Controlled replay"
+          ],
+          "tradeoffs": [
+            "Needs operational ownership"
+          ],
+          "whySelected": "Makes failure a designed path rather than a hidden timeout.",
+          "technologies": [
+            "Dead-letter queues"
+          ],
+          "relatedProjects": [
+            "public-project-01"
+          ],
+          "relatedDecisions": [
+            "public-decision-03"
+          ],
+          "relatedNotes": [
+            "public-note-02"
+          ]
+        }
+      ],
+      "edges": [
+        [
+          "api",
+          "broker"
+        ],
+        [
+          "broker",
+          "worker"
+        ],
+        [
+          "worker",
+          "dead-letter"
+        ]
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "decision",
+      "id": "public-decision-01",
+      "title": "Use service and API boundaries",
+      "problem": "Capabilities needed to evolve without coupling every workflow change.",
+      "constraints": [
+        "Preserve compatibility",
+        "Keep ownership clear",
+        "Avoid undocumented topology claims"
+      ],
+      "options": [
+        "One shared application boundary",
+        "Explicit service and API boundaries"
+      ],
+      "decision": "Use explicit service and API boundaries where the documented workflow benefits from independent evolution.",
+      "tradeoffs": [
+        "More interfaces to version",
+        "Operational ownership must be explicit"
+      ],
+      "outcome": "A clearer map from business responsibility to engineering ownership.",
+      "lesson": "Boundaries are useful when they make change safer, not when they add ceremony.",
+      "relatedProjects": [
+        "public-project-01",
+        "public-project-07"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "decision",
+      "id": "public-decision-02",
+      "title": "Treat automated tests as a release-quality control",
+      "problem": "Regression risk rises as enterprise workflows and integrations grow.",
+      "constraints": [
+        "Protect existing behavior",
+        "Keep feedback close to implementation"
+      ],
+      "options": [
+        "Manual regression only",
+        "Automated backend coverage plus targeted regression checks"
+      ],
+      "decision": "Use automated tests as a repeatable quality gate.",
+      "tradeoffs": [
+        "Upfront test maintenance",
+        "Requires stable test seams"
+      ],
+      "outcome": "More confidence when changing integration-heavy workflows.",
+      "lesson": "Quality is a system property created by habits, not a final inspection step.",
+      "relatedProjects": [
+        "public-project-01",
+        "public-project-11"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "decision",
+      "id": "public-decision-03",
+      "title": "Label architecture evidence clearly",
+      "problem": "Public architecture stories can sound more certain than their evidence.",
+      "constraints": [
+        "Keep the design focused",
+        "Keep diagrams useful",
+        "Separate documented facts from reference patterns"
+      ],
+      "options": [
+        "Present one definitive topology",
+        "Use evidence states and text equivalents"
+      ],
+      "decision": "Use documented/reference labels and concise text equivalents.",
+      "tradeoffs": [
+        "Less visual certainty",
+        "More editorial discipline"
+      ],
+      "outcome": "Readers can explore the reasoning through a concise engineering blueprint.",
+      "lesson": "Trust grows when the engineering context is clear.",
+      "relatedProjects": [
+        "public-project-01",
+        "public-project-06"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "note",
+      "id": "public-note-01",
+      "title": "Imaging exchange: architecture notes",
+      "overview": "A short preview of ingestion, archive, and retrieval responsibilities in an imaging workflow.",
+      "stack": [
+        "DICOM",
+        "REST APIs",
+        "C#",
+        ".NET",
+        "SQL Server"
+      ],
+      "challenges": [
+        "Protocol compatibility",
+        "Reliable retrieval",
+        "Clear data ownership"
+      ],
+      "decisions": [
+        "Keep domain-specific handling at the imaging boundary",
+        "Make availability and failure handling explicit"
+      ],
+      "references": [
+        "https://www.dicomstandard.org/current/",
+        "Project: Enterprise Archive"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "note",
+      "id": "public-note-02",
+      "title": "Event-driven workflows: architecture notes",
+      "overview": "A concise look at why asynchronous communication can help isolate workflow responsibilities.",
+      "stack": [
+        "RabbitMQ",
+        "Microservices",
+        "Retry policies",
+        "Dead-letter queues"
+      ],
+      "challenges": [
+        "Eventual consistency",
+        "Retry behavior",
+        "Operational visibility"
+      ],
+      "decisions": [
+        "Use explicit message intent",
+        "Keep retry and terminal-failure paths visible"
+      ],
+      "references": [
+        "https://www.rabbitmq.com/docs",
+        "Project: Enterprise Archive"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "note",
+      "id": "public-note-03",
+      "title": "Enterprise automation: architecture notes",
+      "overview": "A high-level view of adapter boundaries across heterogeneous enterprise systems.",
+      "stack": [
+        "C#",
+        ".NET",
+        "WPF",
+        "SQL Server",
+        "RPA"
+      ],
+      "challenges": [
+        "Different interaction models",
+        "Consistent failure handling",
+        "Maintainable integrations"
+      ],
+      "decisions": [
+        "Normalize automation behind adapters",
+        "Keep orchestration separate from target-system details"
+      ],
+      "references": [
+        "https://learn.microsoft.com/dotnet/",
+        "Project: Enterprise Automation Framework"
+      ],
+      "publicationState": "approved"
+    }
+  ]
+}
