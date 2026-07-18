@@ -29,7 +29,7 @@
       {
         "eyebrow": "Technical leadership",
         "title": "Teams that ship with confidence",
-        "copy": "Hands-on guidance, quality habits, and shared context across disciplines."
+        "copy": "Team management, product planning, quality habits, and shared context across disciplines."
       }
     ]
   },
@@ -51,6 +51,8 @@
       "responsibilities": [
         "Own architecture, design, implementation, delivery, and cross-team coordination.",
         "Lead technical reviews and mentor engineers working on archive capabilities.",
+        "Support team management through mentoring, code reviews, sprint planning, and cross-functional delivery.",
+        "Contribute to product planning, roadmap discussions, and backlog refinement.",
         "Improve backend performance, quality, maintainability, and test coverage."
       ],
       "technologies": [
@@ -87,6 +89,7 @@
       "id": "public-project-02",
       "title": "PACS Prefetch",
       "projectId": "public-project-02",
+      "parentProjectId": "public-project-01",
       "employer": "GE HealthCare",
       "domain": "Healthcare imaging",
       "overview": "Prefetch capability for making relevant PACS imaging studies available to downstream clinical workflows.",
@@ -122,6 +125,7 @@
       "id": "public-project-03",
       "title": "Archive Capacity Expansion",
       "projectId": "public-project-03",
+      "parentProjectId": "public-project-01",
       "employer": "GE HealthCare",
       "domain": "Healthcare imaging",
       "overview": "Archive-scale enhancement designed to support a larger number of archive instances without destabilizing existing behavior.",
@@ -215,41 +219,6 @@
       "decisions": [],
       "lessons": [],
       "references": [],
-      "publicationState": "approved"
-    },
-    {
-      "visibility": "PUBLIC",
-      "kind": "project",
-      "id": "public-project-06",
-      "title": "Service Boundary Modernization",
-      "projectId": "public-project-06",
-      "employer": "Enterprise engineering engagement",
-      "domain": "Enterprise modernization",
-      "overview": "Modernization work involving migration of legacy capabilities toward microservices and improved engineering workflows.",
-      "challenge": "Legacy application boundaries can constrain deployment, maintainability, and independent evolution.",
-      "solution": "This work demonstrates microservices migration and developer-assistance tooling-assisted engineering, but keeps employer context general.",
-      "architecture": "Target architecture uses decomposed services and independent delivery boundaries; the architecture is presented as a high-level flow.",
-      "role": "Architecture and engineering contribution",
-      "dates": "Project preview",
-      "responsibilities": [
-        "Contribute architecture and implementation work.",
-        "Use developer-assistance tooling for documentation and SQL-related development tasks."
-      ],
-      "technologies": [
-        "Microservices",
-        "C#",
-        ".NET",
-        "developer-assistance tooling",
-        "CI/CD"
-      ],
-      "impact": [
-        "Clarified service boundaries to make modernization easier to evolve and operate."
-      ],
-      "decisions": [],
-      "lessons": [],
-      "references": [
-        "https://learn.microsoft.com/dotnet/"
-      ],
       "publicationState": "approved"
     },
     {
@@ -656,6 +625,84 @@
       "decisions": [],
       "lessons": [],
       "references": [],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-19",
+      "title": "Enterprise UI Platform Modernization",
+      "projectId": "public-project-19",
+      "employer": "GE HealthCare",
+      "domain": "Enterprise UI platform",
+      "overview": "A staged modernization of a shared enterprise UI platform across Angular and Node.js boundaries.",
+      "challenge": "A long-lived shared UI platform needed a safe path from Angular 12 to Angular 22 without disrupting dependent applications.",
+      "solution": "Led staged upgrades, compatibility checkpoints, and AI-assisted validation to keep the platform maintainable as dependencies evolved.",
+      "architecture": "A shared UI platform with versioned Angular and Node.js boundaries, compatibility checks, and repeatable validation workflows.",
+      "role": "Staff Software Engineer",
+      "dates": "December 2019 - Present",
+      "responsibilities": [
+        "Lead the framework migration plan and implementation across Angular versions.",
+        "Coordinate compatibility work across shared UI consumers and delivery boundaries.",
+        "Use AI-assisted validation to improve repeatability during migration work."
+      ],
+      "technologies": [
+        "Angular",
+        "Node.js",
+        "AI-assisted validation",
+        "MCP"
+      ],
+      "impact": [
+        "Established a staged migration path from Angular 12 to Angular 22.",
+        "Improved compatibility and maintainability for a shared enterprise UI platform.",
+        "Added AI-assisted validation to make migration checks more repeatable."
+      ],
+      "decisions": [
+        "Use staged upgrades and compatibility checkpoints instead of a single cutover.",
+        "Keep validation repeatable and reviewable as framework dependencies changed."
+      ],
+      "lessons": [
+        "Shared platform migrations benefit from explicit compatibility checkpoints and small reversible steps."
+      ],
+      "references": [
+        "https://angular.dev/",
+        "https://nodejs.org/en/docs"
+      ],
+      "publicationState": "approved"
+    },
+    {
+      "visibility": "PUBLIC",
+      "kind": "project",
+      "id": "public-project-06",
+      "title": "Service Boundary Modernization",
+      "projectId": "public-project-06",
+      "employer": "Self-developed project",
+      "domain": "Enterprise modernization",
+      "overview": "Modernization work involving migration of legacy capabilities toward microservices and improved engineering workflows.",
+      "challenge": "Legacy application boundaries can constrain deployment, maintainability, and independent evolution.",
+      "solution": "This work demonstrates microservices migration and developer-assistance tooling-assisted engineering, but keeps employer context general.",
+      "architecture": "Target architecture uses decomposed services and independent delivery boundaries; the architecture is presented as a high-level flow.",
+      "role": "Independent architecture and engineering project",
+      "dates": "Self-directed",
+      "responsibilities": [
+        "Contribute architecture and implementation work.",
+        "Use developer-assistance tooling for documentation and SQL-related development tasks."
+      ],
+      "technologies": [
+        "Microservices",
+        "C#",
+        ".NET",
+        "developer-assistance tooling",
+        "CI/CD"
+      ],
+      "impact": [
+        "Clarified service boundaries to make modernization easier to evolve and operate."
+      ],
+      "decisions": [],
+      "lessons": [],
+      "references": [
+        "https://learn.microsoft.com/dotnet/"
+      ],
       "publicationState": "approved"
     },
     {

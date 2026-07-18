@@ -3,12 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#071a35" />
+    <meta name="theme-color" content="#f4fbfa" />
     <meta
       name="description"
       content="Abhijit Ojha — Staff Software Engineer designing reliable enterprise systems."
     />
     <title>Abhijit Ojha — Staff Software Engineer</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -23,9 +24,37 @@
     <div class="ambient ambient-b" aria-hidden="true"></div>
     <header class="site-header">
       <nav class="nav shell" aria-label="Primary navigation">
-        <a class="wordmark" href="#home" aria-label="Abhijit Ojha home"
-          ><span>AO</span><strong>abhijit ojha</strong></a
-        >
+        <a class="wordmark" href="#home" aria-label="Abhijit Ojha home">
+          <svg
+            class="brand-mark"
+            viewBox="0 0 48 48"
+            role="img"
+            aria-labelledby="brand-mark-title brand-mark-description"
+          >
+            <title id="brand-mark-title">AO monogram</title>
+            <desc id="brand-mark-description">Interlocked initials for Abhijit Ojha</desc>
+            <defs>
+              <linearGradient
+                id="brand-mark-gradient"
+                x1="8"
+                y1="6"
+                x2="42"
+                y2="44"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#0ea6a0" />
+                <stop offset="1" stop-color="#245edb" />
+              </linearGradient>
+            </defs>
+            <rect class="brand-mark-frame" width="48" height="48" rx="14" />
+            <path class="brand-mark-a" d="M10 35 18.5 11 27 35M13.5 26.5h10" />
+            <path
+              class="brand-mark-o"
+              d="M28 12.5c7-4 12.5 1.5 12.5 10.5S35 37.5 28 33.5c-4.5-2.6-4.5-18.4 0-21Z"
+            />
+          </svg>
+          <strong>abhijit ojha</strong>
+        </a>
         <div class="nav-links">
           <a href="#work">Work</a><a href="#architecture">Explorer</a
           ><a href="#decisions">Journal</a><a href="#contact">Contact</a>
@@ -53,6 +82,10 @@
             I connect architecture, hands-on delivery, and calm technical leadership to help teams
             make consequential systems easier to evolve.
           </p>
+          <div class="hero-career-highlights" aria-label="Career highlights">
+            <span class="credibility-label">Career highlights</span>
+            <div id="career-highlights" class="highlight-row"></div>
+          </div>
           <div class="hero-actions">
             <a class="button button-primary" href="#work"
               >Explore the work <span aria-hidden="true">↓</span></a
@@ -65,21 +98,29 @@
             ><span class="location-separator">·</span>architecture · platform · delivery
           </p>
         </div>
-        <div class="hero-art reveal" aria-label="Animated systems thinking illustration" role="img">
+        <div
+          class="hero-art reveal"
+          aria-label="Staff Software Engineer expertise map"
+          role="group"
+        >
           <div class="hero-grid"></div>
           <div class="hero-ring ring-one"></div>
           <div class="hero-ring ring-two"></div>
           <div class="hero-ring ring-three"></div>
-          <div class="hero-core"><span>systems</span><strong>that hold</strong></div>
-          <span class="orbit-label label-a">architecture</span
-          ><span class="orbit-label label-b">reliability</span
-          ><span class="orbit-label label-c">leadership</span>
-        </div>
-      </section>
-      <section class="credibility-strip" aria-label="Career highlights">
-        <div class="shell credibility-inner">
-          <span class="credibility-label">Career highlights</span>
-          <div id="career-highlights" class="highlight-row"></div>
+          <div class="expertise-orbit" aria-label="Staff Software Engineer expertise map">
+            <svg
+              id="expertise-paths"
+              class="expertise-paths"
+              viewBox="0 0 100 100"
+              aria-hidden="true"
+              focusable="false"
+            ></svg>
+            <div class="hero-core" aria-label="Engineering systems that last">
+              <span>ENGINEERING</span><strong>SYSTEMS THAT LAST</strong>
+            </div>
+            <div id="expertise-spheres" class="expertise-spheres"></div>
+            <p id="expertise-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+          </div>
         </div>
       </section>
       <section class="section shell value-section" aria-labelledby="value-heading">
@@ -139,7 +180,7 @@
             </div>
           </li>
         </ol>
-        <div class="career-timeline-wrap">
+        <div class="career-timeline-wrap" role="region" aria-label="Career and project timeline">
           <div class="career-timeline-heading">
             <div>
               <p class="eyebrow">The work, over time</p>
@@ -150,7 +191,11 @@
               node to open its full review.
             </p>
           </div>
-          <ol id="career-timeline" class="career-timeline" aria-label="Career and project timeline">
+          <ol
+            id="career-timeline"
+            class="career-timeline"
+            aria-label="Career path by company and project"
+          >
             <li class="loading-copy">Loading the career timeline…</li>
           </ol>
         </div>

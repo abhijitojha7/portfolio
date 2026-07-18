@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title desc">
+  <title id="title">AO monogram</title>
+  <desc id="desc">Interlocked initials for Abhijit Ojha</desc>
+  <defs>
+    <linearGradient id="gradient" x1="8" y1="6" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0ea6a0" />
+      <stop offset="1" stop-color="#245edb" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="14" fill="url(#gradient)" />
+  <path d="M10 35 18.5 11 27 35M13.5 26.5h10" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+  <path d="M28 12.5c7-4 12.5 1.5 12.5 10.5S35 37.5 28 33.5c-4.5-2.6-4.5-18.4 0-21Z" fill="none" stroke="#d7fffa" stroke-linecap="round" stroke-width="3" />
+</svg>

@@ -1,9 +1,86 @@
 /* Runtime data is intentionally limited to the generated public artifact. */
 /* Diagram styling uses the --edge-width token defined in styles.css. */
-const state = { data: null, scenarioId: null, componentId: null, filter: "All", query: "" };
+const state = {
+  data: null,
+  scenarioId: null,
+  componentId: null,
+  expertiseId: null,
+  filter: "All",
+  query: "",
+};
 const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+const SELF_DEVELOPED_LABEL = "Self-developed projects";
+const COMPANY_HISTORY_LABEL = "Company history";
+
+function isSelfDevelopedProject(project) {
+  const employer = typeof project?.employer === "string" ? project.employer : "";
+  return /enterprise engineering engagement|self-developed/i.test(employer);
+}
+
+const EXPERTISE_ITEMS = Object.freeze([
+  {
+    id: "distributed-systems",
+    name: "Distributed Systems",
+    description: "Designing scalable enterprise systems.",
+  },
+  {
+    id: "project-architect",
+    name: "Project Architect",
+    description: "Building maintainable and extensible software architectures.",
+  },
+  {
+    id: "dotnet-csharp",
+    name: ".NET & C#",
+    description: "13+ years developing enterprise applications.",
+  },
+  {
+    id: "microservices",
+    name: "Microservices",
+    description: "Designing resilient service-oriented platforms.",
+  },
+  {
+    id: "aws-cloud",
+    name: "AWS Cloud",
+    description: "Cloud-native application design and deployment.",
+  },
+  {
+    id: "performance-engineering",
+    name: "Performance Engineering",
+    description: "Optimizing reliability, scalability and throughput.",
+  },
+  {
+    id: "healthcare-interoperability",
+    name: "Healthcare Interoperability",
+    description: "DICOM, HL7/FHIR and enterprise healthcare platforms.",
+  },
+  {
+    id: "technical-leadership",
+    name: "Technical Leadership",
+    description: "Leading teams through architecture and execution.",
+  },
+  {
+    id: "team-management",
+    name: "Team Management",
+    description: "Mentoring teams through planning, feedback and execution.",
+  },
+  {
+    id: "product-thinking",
+    name: "Product Thinking",
+    description: "Engineering with customer and business impact in mind.",
+  },
+  {
+    id: "delivery-excellence",
+    name: "Delivery Excellence",
+    description: "Driving predictable, high-quality software delivery.",
+  },
+  {
+    id: "reliability-engineering",
+    name: "Reliability Engineering",
+    description: "Designing systems that remain dependable under scale.",
+  },
+]);
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -19,19 +96,25 @@ function normalizeBundle(bundle) {
   const profileRecord = records.find((record) => record.kind === "profile");
   const projects = records
     .filter((record) => record.kind === "project")
-    .map((record) => ({
-      ...record,
-      eyebrow: record.domain || "Engineering project",
-      challenge: record.challenge || record.overview,
-      role: record.role || "Architecture and engineering delivery",
-      technologies: Array.isArray(record.technologies) ? record.technologies : [],
-      architecture: record.architecture || "A documented public architecture view.",
-      impact: Array.isArray(record.impact) ? record.impact.join(" ") : record.impact || "",
-      employer: record.employer
-        ? `Completed at ${record.employer}`
-        : "Enterprise delivery experience",
-      references: Array.isArray(record.references) ? record.references : [],
-    }));
+    .map((record) => {
+      const employer = typeof record.employer === "string" ? record.employer.trim() : "";
+      const isSelfDeveloped = isSelfDevelopedProject({ employer });
+      return {
+        ...record,
+        eyebrow: record.domain || "Engineering project",
+        challenge: record.challenge || record.overview,
+        role: record.role || "Architecture and engineering delivery",
+        technologies: Array.isArray(record.technologies) ? record.technologies : [],
+        architecture: record.architecture || "A documented public architecture view.",
+        impact: Array.isArray(record.impact) ? record.impact.join(" ") : record.impact || "",
+        employer: isSelfDeveloped
+          ? SELF_DEVELOPED_LABEL
+          : employer
+            ? `Completed at ${employer}`
+            : "Enterprise delivery experience",
+        references: Array.isArray(record.references) ? record.references : [],
+      };
+    });
   const architectures = records
     .filter((record) => record.kind === "architecture")
     .map((record) => {
@@ -113,35 +196,91 @@ function renderProfile(profile) {
     .join("");
 }
 
+function renderExpertiseOrbit() {
+  const target = $("#expertise-spheres");
+  const paths = $("#expertise-paths");
+  if (!target || !paths) return;
+  const radius = 38;
+  const points = EXPERTISE_ITEMS.map((item, index) => {
+    const angle = -90 + index * (360 / EXPERTISE_ITEMS.length);
+    const radians = (angle * Math.PI) / 180;
+    return {
+      ...item,
+      x: 50 + Math.cos(radians) * radius,
+      y: 50 + Math.sin(radians) * radius,
+    };
+  });
+  paths.innerHTML = points
+    .map((item) => `<line x1="50" y1="50" x2="${item.x.toFixed(2)}" y2="${item.y.toFixed(2)}" />`)
+    .join("");
+  target.innerHTML = points
+    .map(
+      (item, index) =>
+        `<button class="expertise-sphere" type="button" data-expertise="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)}: ${escapeHtml(item.description)}" aria-pressed="false" style="--sphere-x:${item.x.toFixed(2)}%;--sphere-y:${item.y.toFixed(2)}%;--expertise-delay:${index * -0.45}s"><span class="expertise-sphere-surface"><strong>${escapeHtml(item.name)}</strong><span class="expertise-tooltip" role="tooltip"><strong class="expertise-tooltip-title">${escapeHtml(item.name)}</strong><span class="expertise-tooltip-description">${escapeHtml(item.description)}</span></span></span></button>`,
+    )
+    .join("");
+}
+
+function setExpertiseActive(id) {
+  const item = EXPERTISE_ITEMS.find((entry) => entry.id === id);
+  const active = item ? id : null;
+  state.expertiseId = active;
+  $$(".expertise-sphere").forEach((button) => {
+    const isActive = button.dataset.expertise === active;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  const liveRegion = $("#expertise-live-region");
+  if (liveRegion) {
+    liveRegion.textContent = item ? `${item.name}. ${item.description}` : "Expertise overview.";
+  }
+}
+
+function toggleExpertise(id) {
+  setExpertiseActive(id === state.expertiseId ? null : id);
+}
+
 function visibleProjects() {
   const query = state.query.trim().toLowerCase();
-  return state.data.projects.filter((project) => {
-    const matchesFilter =
-      state.filter === "All" ||
-      project.employer.includes(state.filter) ||
-      project.domain === state.filter;
-    const matchesQuery =
-      !query ||
-      [
-        project.title,
-        project.domain,
-        project.employer,
-        project.challenge,
-        ...(project.technologies || []),
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(query);
-    return matchesFilter && matchesQuery;
-  });
+  return state.data.projects
+    .filter((project) => {
+      const matchesFilter =
+        state.filter === "All" ||
+        project.employer.includes(state.filter) ||
+        project.domain === state.filter;
+      const matchesQuery =
+        !query ||
+        [
+          project.title,
+          project.domain,
+          project.employer,
+          project.challenge,
+          ...(project.technologies || []),
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(query);
+      return matchesFilter && matchesQuery;
+    })
+    .sort((first, second) => {
+      const firstSelf = Number(isSelfDevelopedProject(first));
+      const secondSelf = Number(isSelfDevelopedProject(second));
+      return firstSelf - secondSelf;
+    });
 }
 
 function renderFilters() {
-  const values = [
-    "All",
+  const employers = [
     ...new Set(
       state.data.projects.map((project) => project.employer.replace(/^Completed at /, "")),
     ),
+  ];
+  const values = [
+    "All",
+    ...employers.filter(
+      (value) => !/self-developed|enterprise engineering engagement/i.test(value),
+    ),
+    ...employers.filter((value) => /self-developed|enterprise engineering engagement/i.test(value)),
   ];
   $("#project-filters").innerHTML = values
     .map(
@@ -176,20 +315,67 @@ function timelineYears(value) {
   return years.length ? years : [0];
 }
 
-function renderTimeline(projects) {
-  const target = $("#career-timeline");
-  if (!target) return;
-  const groups = new Map();
+function splitCareerGroups(projects) {
+  const companies = new Map();
+  const selfDeveloped = [];
   (Array.isArray(projects) ? projects : []).forEach((project, index) => {
     if (!project || typeof project !== "object" || !project.id || !project.title) return;
     const employer =
       typeof project.employer === "string" && project.employer.trim()
         ? project.employer.replace(/^Completed at\s+/i, "").trim()
-        : "Enterprise engineering";
-    if (!groups.has(employer)) groups.set(employer, { projects: [], order: index });
-    groups.get(employer).projects.push({ ...project, _order: index });
+        : "";
+    const entry = { ...project, _order: index };
+    if (!employer || isSelfDevelopedProject({ employer })) {
+      selfDeveloped.push(entry);
+      return;
+    }
+    if (!companies.has(employer)) companies.set(employer, { projects: [], order: index });
+    companies.get(employer).projects.push(entry);
   });
-  const orderedGroups = [...groups.entries()].sort(([, first], [, second]) => {
+  return { companies: [...companies.entries()], selfDeveloped };
+}
+
+function renderTimelineProject(project, projectIndex, nestedProjects = []) {
+  const nestedMarkup = nestedProjects.length
+    ? `<ol class="timeline-subprojects" aria-label="Capabilities within ${escapeHtml(project.title)}">${nestedProjects
+        .map((child, childIndex) => renderTimelineProject(child, childIndex))
+        .join("")}</ol>`
+    : "";
+  return `<li class="timeline-project${nestedProjects.length ? " timeline-project-parent" : ""}" style="--timeline-delay:${projectIndex * 70}ms"><button class="timeline-node" type="button" data-project="${escapeHtml(project.id)}" aria-label="Open ${escapeHtml(project.title)} project review"><span class="timeline-node-index">${String(projectIndex + 1).padStart(2, "0")}</span><span class="timeline-node-copy"><strong>${escapeHtml(project.title)}</strong><small>${escapeHtml(project.role || "Engineering delivery")} · ${escapeHtml(project.domain || "Engineering project")} · ${escapeHtml(project.dates || "Project preview")}</small></span><span class="timeline-node-arrow" aria-hidden="true">↗</span></button>${nestedMarkup}</li>`;
+}
+
+function nestTimelineChildren(target, projects) {
+  const projectById = new Map(projects.map((project) => [project.id, project]));
+  const buttons = new Map(
+    $$(".timeline-node", target).map((button) => [button.dataset.project, button]),
+  );
+  projects.forEach((project) => {
+    const parent = project.parentProjectId && projectById.get(project.parentProjectId);
+    const childItem = buttons.get(project.id)?.closest(".timeline-project");
+    const parentItem = parent && buttons.get(parent.id)?.closest(".timeline-project");
+    if (!parent || !childItem || !parentItem) return;
+    const childIndex = [...childItem.parentElement.children].indexOf(childItem);
+    const template = document.createElement("template");
+    template.innerHTML = renderTimelineProject(project, childIndex);
+    const renderedChild = template.content.firstElementChild;
+    if (!renderedChild) return;
+    childItem.replaceWith(renderedChild);
+    let nested = $(".timeline-subprojects", parentItem);
+    if (!nested) {
+      nested = document.createElement("ol");
+      nested.className = "timeline-subprojects";
+      nested.setAttribute("aria-label", `Capabilities within ${parent.title}`);
+      parentItem.append(nested);
+    }
+    nested.append(renderedChild);
+  });
+}
+
+function renderTimeline(projects) {
+  const target = $("#career-timeline");
+  if (!target) return;
+  const { companies, selfDeveloped } = splitCareerGroups(projects);
+  const orderedGroups = companies.sort(([, first], [, second]) => {
     const firstYear = Math.max(
       ...first.projects.flatMap((project) => timelineYears(project.dates)),
       0,
@@ -200,23 +386,38 @@ function renderTimeline(projects) {
     );
     return secondYear - firstYear || first.order - second.order;
   });
-  if (!orderedGroups.length) {
+  if (!orderedGroups.length && !selfDeveloped.length) {
     target.innerHTML = '<li class="loading-copy">No public timeline entries are available.</li>';
     return;
   }
-  target.innerHTML = orderedGroups
+  const companyMarkup = orderedGroups
     .map(([employer, group], groupIndex) => {
-      const projectsForEmployer = [...group.projects].sort(
-        (first, second) => first._order - second._order,
-      );
-      return `<li class="timeline-company reveal" style="--reveal-delay:${groupIndex * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(groupIndex + 1).padStart(2, "0")} / Company context</p><h3>${escapeHtml(employer)}</h3></div><span class="timeline-date">${escapeHtml(projectsForEmployer[0]?.dates || "Project portfolio")}</span></div><ol class="timeline-projects" aria-label="Projects at ${escapeHtml(employer)}">${projectsForEmployer
-        .map(
-          (project, projectIndex) =>
-            `<li class="timeline-project" style="--timeline-delay:${projectIndex * 70}ms"><button class="timeline-node" type="button" data-project="${escapeHtml(project.id)}" aria-label="Open ${escapeHtml(project.title)} project review"><span class="timeline-node-index">${String(projectIndex + 1).padStart(2, "0")}</span><span class="timeline-node-copy"><strong>${escapeHtml(project.title)}</strong><small>${escapeHtml(project.domain || "Engineering project")} · ${escapeHtml(project.dates || "Project preview")}</small></span><span class="timeline-node-arrow" aria-hidden="true">↗</span></button></li>`,
+      const projectIds = new Set(group.projects.map((project) => project.id));
+      const childrenByParent = new Map();
+      group.projects.forEach((project) => {
+        if (!project.parentProjectId || !projectIds.has(project.parentProjectId)) return;
+        const children = childrenByParent.get(project.parentProjectId) || [];
+        children.push(project);
+        childrenByParent.set(project.parentProjectId, children);
+      });
+      const projectsForEmployer = group.projects
+        .filter((project) => !project.parentProjectId || !projectIds.has(project.parentProjectId))
+        .sort((first, second) => first._order - second._order);
+      return `<li class="timeline-company reveal" data-career-group="company" style="--reveal-delay:${groupIndex * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(groupIndex + 1).padStart(2, "0")} / ${COMPANY_HISTORY_LABEL}</p><h3>${escapeHtml(employer)}</h3></div><span class="timeline-date">${escapeHtml(projectsForEmployer[0]?.dates || "Project portfolio")}</span></div><ol class="timeline-projects" aria-label="Projects at ${escapeHtml(employer)}">${projectsForEmployer
+        .map((project, projectIndex) =>
+          renderTimelineProject(project, projectIndex, childrenByParent.get(project.id) || []),
         )
         .join("")}</ol></div></li>`;
     })
     .join("");
+  const orderedSelfDeveloped = selfDeveloped.sort((first, second) => first._order - second._order);
+  const selfDevelopedMarkup = selfDeveloped.length
+    ? `<li class="timeline-company timeline-company-self reveal" data-career-group="self-developed" style="--reveal-delay:${orderedGroups.length * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(orderedGroups.length + 1).padStart(2, "0")} / Independent practice</p><h3>${SELF_DEVELOPED_LABEL}</h3></div><span class="timeline-date">Self-directed</span></div><p class="timeline-group-note">Independent engineering patterns and platform ideas developed outside an employer context.</p><ol class="timeline-projects" aria-label="${SELF_DEVELOPED_LABEL}">${orderedSelfDeveloped
+        .map((project, projectIndex) => renderTimelineProject(project, projectIndex))
+        .join("")}</ol></div></li>`
+    : "";
+  target.innerHTML = companyMarkup + selfDevelopedMarkup;
+  nestTimelineChildren(target, projects);
   setupReveal();
 }
 
@@ -245,13 +446,26 @@ function renderScenarioNav() {
     .join("");
 }
 
+const DIAGRAM_LAYOUT = Object.freeze({
+  left: 18,
+  right: 82,
+  top: 28,
+  bottom: 64,
+});
+
+function diagramAnchor(index, count) {
+  const ratio = index / Math.max(1, count - 1);
+  return {
+    x: DIAGRAM_LAYOUT.left + ratio * (DIAGRAM_LAYOUT.right - DIAGRAM_LAYOUT.left),
+    y: index % 2 ? DIAGRAM_LAYOUT.bottom : DIAGRAM_LAYOUT.top,
+  };
+}
+
 function edgeGeometry(from, to, count) {
   if (from === undefined || to === undefined) return [];
-  const x1 = 12 + (from * 76) / Math.max(1, count - 1);
-  const x2 = 12 + (to * 76) / Math.max(1, count - 1);
-  const y1 = from % 2 ? 64 : 40;
-  const y2 = to % 2 ? 64 : 40;
-  return [x1, y1, x2, y2];
+  const fromAnchor = diagramAnchor(from, count);
+  const toAnchor = diagramAnchor(to, count);
+  return [fromAnchor.x, fromAnchor.y, toAnchor.x, toAnchor.y];
 }
 
 function renderDiagram(scenario) {
@@ -275,11 +489,10 @@ function renderDiagram(scenario) {
         `<line class="flow-edge" data-from="${escapeHtml(from)}" data-to="${escapeHtml(to)}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`,
     )
     .join("");
-  diagram.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="flow-gradient" x1="0" x2="1"><stop stop-color="#53f4d2"/><stop offset="1" stop-color="#4d86ff"/></linearGradient></defs>${lines}</svg>${scenario.components
+  diagram.innerHTML = `<svg class="diagram-edges" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="flow-gradient" x1="0" x2="1"><stop stop-color="#53f4d2"/><stop offset="1" stop-color="#4d86ff"/></linearGradient></defs>${lines}</svg>${scenario.components
     .map((component, index) => {
-      const left = 4 + (index * 92) / Math.max(1, count - 1);
-      const top = index % 2 ? 58 : 22;
-      return `<button class="diagram-node" type="button" data-component="${escapeHtml(component.id)}" style="left:${left}%;top:${top}%" aria-label="Focus ${escapeHtml(component.name)}"><span class="node-label">${escapeHtml(component.name)}</span><span class="node-type">${escapeHtml(component.type)}</span></button>`;
+      const anchor = diagramAnchor(index, count);
+      return `<button class="diagram-node" type="button" data-component="${escapeHtml(component.id)}" style="left:${anchor.x}%;top:${anchor.y}%;" aria-label="Focus ${escapeHtml(component.name)}"><span class="node-label">${escapeHtml(component.name)}</span><span class="node-type">${escapeHtml(component.type)}</span></button>`;
     })
     .join("")}`;
   $("#diagram-text").textContent = scenario.textEquivalent;
@@ -437,6 +650,10 @@ function setupInteractions() {
     const button = event.target.closest("[data-scenario]");
     if (button) selectScenario(button.dataset.scenario);
   });
+  $("#expertise-spheres")?.addEventListener("click", (event) => {
+    const button = event.target.closest(".expertise-sphere");
+    if (button) toggleExpertise(button.dataset.expertise);
+  });
   document.addEventListener("click", (event) => {
     const node = event.target.closest(".diagram-node");
     if (node) {
@@ -456,6 +673,21 @@ function setupInteractions() {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && state.componentId) clearFocus();
+    if (event.key === "Escape" && state.expertiseId) setExpertiseActive(null);
+    if (event.target.matches(".expertise-sphere")) {
+      const spheres = $$(".expertise-sphere");
+      const currentIndex = spheres.indexOf(event.target);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setExpertiseActive(null);
+      } else if (["ArrowRight", "ArrowDown"].includes(event.key)) {
+        event.preventDefault();
+        spheres[(currentIndex + 1) % spheres.length]?.focus();
+      } else if (["ArrowLeft", "ArrowUp"].includes(event.key)) {
+        event.preventDefault();
+        spheres[(currentIndex - 1 + spheres.length) % spheres.length]?.focus();
+      }
+    }
     if ((event.key === "Enter" || event.key === " ") && event.target.matches(".diagram-node")) {
       event.preventDefault();
       selectComponent(event.target.dataset.component);
@@ -489,4 +721,5 @@ async function load() {
 }
 
 setupInteractions();
+renderExpertiseOrbit();
 load();
