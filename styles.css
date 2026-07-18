@@ -379,14 +379,16 @@ em {
 .hero-letter {
   position: relative;
   display: inline-block;
+  overflow: visible;
   padding-inline: 0.012em;
+  vertical-align: baseline;
   isolation: isolate;
 }
 .hero-letter-face,
 .hero-letter-outline {
   display: inline-block;
   font: inherit;
-  line-height: inherit;
+  line-height: 1.05;
 }
 .hero-letter-face {
   position: relative;
@@ -415,7 +417,7 @@ em {
   color: transparent;
   -webkit-text-stroke: 1px rgba(36, 94, 219, 0.56);
   -webkit-text-fill-color: transparent;
-  animation: hero-letter-outline 3.8s ease-in-out infinite;
+  animation: hero-letter-outline 1.8s ease-in-out infinite;
   animation-delay: calc(var(--letter-index) * -160ms);
 }
 .hero-letter:nth-child(2n) .hero-letter-outline {
@@ -426,6 +428,15 @@ em {
   padding: 0;
   background: none;
   animation: none;
+}
+.hero-letter-j {
+  padding-bottom: 0.08em;
+  text-rendering: geometricPrecision;
+}
+.hero-letter-j .hero-letter-face,
+.hero-letter-j .hero-letter-outline {
+  font-family: "Trebuchet MS", "Manrope", sans-serif;
+  font-variant-ligatures: none;
 }
 .hero-name-lockup {
   position: relative;
@@ -913,11 +924,6 @@ em {
   margin: 0;
   font-size: clamp(1.35rem, 2.4vw, 2.1rem);
   line-height: 1.15;
-}
-.career-timeline-heading p:last-child {
-  max-width: 360px;
-  margin: 0 0 3px;
-  font-size: 0.8rem;
 }
 .career-timeline {
   position: relative;
@@ -1836,12 +1842,12 @@ em {
 @keyframes hero-letter-outline {
   0%,
   100% {
-    opacity: 0.48;
-    transform: scale(0.99);
+    opacity: 0.7;
+    transform: scale(0.995);
   }
   50% {
-    opacity: 0.94;
-    transform: scale(1.015);
+    opacity: 1;
+    transform: scale(1.025);
   }
 }
 @keyframes hero-letter-shimmer {
@@ -1997,9 +2003,6 @@ em {
   }
   .career-timeline-heading {
     display: block;
-  }
-  .career-timeline-heading p:last-child {
-    margin-top: 16px;
   }
   .timeline-projects,
   .review-grid {

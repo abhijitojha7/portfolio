@@ -183,7 +183,9 @@ function renderAnimatedName(name) {
       if (character === " ") {
         return `<span class="hero-letter hero-letter-space" aria-hidden="true">${content}</span>`;
       }
-      return `<span class="hero-letter" aria-hidden="true" style="--letter-index:${index}"><span class="hero-letter-outline" aria-hidden="true">${content}</span><span class="hero-letter-face">${content}</span></span>`;
+      const glyphClass =
+        character.toLowerCase() === "j" ? "hero-letter hero-letter-j" : "hero-letter";
+      return `<span class="${glyphClass}" data-glyph="${content}" aria-hidden="true" style="--letter-index:${index}"><span class="hero-letter-outline" aria-hidden="true">${content}</span><span class="hero-letter-face">${content}</span></span>`;
     })
     .join("");
 }
