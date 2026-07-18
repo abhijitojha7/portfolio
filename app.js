@@ -162,10 +162,61 @@ function renderProjects() {
               .map((item) => `<span>${escapeHtml(item)}</span>`)
               .join(
                 "",
-              )}</div><p class="project-employer">${escapeHtml(project.employer)}</p><button class="card-action" type="button" data-project="${escapeHtml(project.id)}">Read the full preview <span aria-hidden="true">↗</span></button></article>`,
+              )}</div><p class="project-employer">${escapeHtml(project.employer)}</p><button class="card-action" type="button" data-project="${escapeHtml(project.id)}">Read the full review <span aria-hidden="true">↗</span></button></article>`,
         )
         .join("")
     : `<p class="loading-copy">No projects match that view. Try another filter.</p>`;
+  setupReveal();
+}
+
+function timelineYears(value) {
+  const years = [...String(value ?? "").matchAll(/(?:19|20)\d{2}/g)].map((match) =>
+    Number(match[0]),
+  );
+  return years.length ? years : [0];
+}
+
+function renderTimeline(projects) {
+  const target = $("#career-timeline");
+  if (!target) return;
+  const groups = new Map();
+  (Array.isArray(projects) ? projects : []).forEach((project, index) => {
+    if (!project || typeof project !== "object" || !project.id || !project.title) return;
+    const employer =
+      typeof project.employer === "string" && project.employer.trim()
+        ? project.employer.replace(/^Completed at\s+/i, "").trim()
+        : "Enterprise engineering";
+    if (!groups.has(employer)) groups.set(employer, { projects: [], order: index });
+    groups.get(employer).projects.push({ ...project, _order: index });
+  });
+  const orderedGroups = [...groups.entries()].sort(([, first], [, second]) => {
+    const firstYear = Math.max(
+      ...first.projects.flatMap((project) => timelineYears(project.dates)),
+      0,
+    );
+    const secondYear = Math.max(
+      ...second.projects.flatMap((project) => timelineYears(project.dates)),
+      0,
+    );
+    return secondYear - firstYear || first.order - second.order;
+  });
+  if (!orderedGroups.length) {
+    target.innerHTML = '<li class="loading-copy">No public timeline entries are available.</li>';
+    return;
+  }
+  target.innerHTML = orderedGroups
+    .map(([employer, group], groupIndex) => {
+      const projectsForEmployer = [...group.projects].sort(
+        (first, second) => first._order - second._order,
+      );
+      return `<li class="timeline-company reveal" style="--reveal-delay:${groupIndex * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(groupIndex + 1).padStart(2, "0")} / Company context</p><h3>${escapeHtml(employer)}</h3></div><span class="timeline-date">${escapeHtml(projectsForEmployer[0]?.dates || "Project portfolio")}</span></div><ol class="timeline-projects" aria-label="Projects at ${escapeHtml(employer)}">${projectsForEmployer
+        .map(
+          (project, projectIndex) =>
+            `<li class="timeline-project" style="--timeline-delay:${projectIndex * 70}ms"><button class="timeline-node" type="button" data-project="${escapeHtml(project.id)}" aria-label="Open ${escapeHtml(project.title)} project review"><span class="timeline-node-index">${String(projectIndex + 1).padStart(2, "0")}</span><span class="timeline-node-copy"><strong>${escapeHtml(project.title)}</strong><small>${escapeHtml(project.domain || "Engineering project")} · ${escapeHtml(project.dates || "Project preview")}</small></span><span class="timeline-node-arrow" aria-hidden="true">↗</span></button></li>`,
+        )
+        .join("")}</ol></div></li>`;
+    })
+    .join("");
   setupReveal();
 }
 
@@ -321,10 +372,12 @@ function showPreview(type, id) {
         : state.data.notes
   ).find((entry) => (entry.id || entry.slug) === id);
   if (!item) return;
+  const reviewSection = (index, label, value, isHtml = false) =>
+    `<section class="review-section" data-reveal-delay="${index * 70}ms" style="--review-delay:${index * 70}ms"><div class="review-section-number" aria-hidden="true">${String(index).padStart(2, "0")}</div><div><h3 class="review-section-label">${escapeHtml(label)}</h3><div class="review-section-copy">${isHtml ? value : escapeHtml(value || "Not published")}</div></div></section>`;
   const join = (values) => (Array.isArray(values) ? values.join(" · ") : values || "Not published");
   const body =
     type === "project"
-      ? `<p>${escapeHtml(item.challenge)}</p><dl class="preview-detail"><div><dt>Business challenge</dt><dd>${escapeHtml(item.challenge)}</dd></div><div><dt>Role</dt><dd>${escapeHtml(item.role)}</dd></div><div><dt>Solution</dt><dd>${escapeHtml(item.solution)}</dd></div><div><dt>Architecture</dt><dd>${escapeHtml(item.architecture)}</dd></div><div><dt>Engineering impact</dt><dd>${escapeHtml(item.impact)}</dd></div><div><dt>Public references</dt><dd>${renderReferences(item.references)}</dd></div></dl><p class="project-employer">${escapeHtml(item.employer)}</p>`
+      ? `<div class="review-hero"><div class="review-hero-mark" aria-hidden="true">↗</div><div><p class="eyebrow">${escapeHtml(item.title || "Project")} / full review</p><p class="review-hero-lede">${escapeHtml(item.challenge || "A public engineering project preview.")}</p><div class="review-chip-row"><span class="review-chip">${escapeHtml(item.employer || "Enterprise engineering")}</span><span class="review-chip">${escapeHtml(item.dates || "Project preview")}</span><span class="review-chip">${escapeHtml(item.domain || "Engineering project")}</span></div></div></div><div class="review-grid">${reviewSection(1, "Business challenge", item.challenge)}${reviewSection(2, "Role", item.role)}${reviewSection(3, "Solution", item.solution)}${reviewSection(4, "Architecture", item.architecture)}${reviewSection(5, "Engineering impact", item.impact)}${reviewSection(6, "Public references", renderReferences(item.references), true)}</div>`
       : type === "decision"
         ? `<p>${escapeHtml(item.problem)}</p><dl class="preview-detail"><div><dt>Constraints</dt><dd>${escapeHtml(join(item.constraints))}</dd></div><div><dt>Options considered</dt><dd>${escapeHtml(join(item.options))}</dd></div><div><dt>Final decision</dt><dd>${escapeHtml(item.decision)}</dd></div><div><dt>Trade-offs</dt><dd>${escapeHtml(join(item.tradeoffs))}</dd></div><div><dt>Outcome</dt><dd>${escapeHtml(item.outcome)}</dd></div><div><dt>Lessons learned</dt><dd>${escapeHtml(item.lesson)}</dd></div></dl>`
         : `<p>${escapeHtml(item.overview)}</p><dl class="preview-detail"><div><dt>Executive overview</dt><dd>${escapeHtml(item.overview)}</dd></div><div><dt>Technology stack</dt><dd>${escapeHtml(join(item.stack))}</dd></div><div><dt>Engineering challenges</dt><dd>${escapeHtml(join(item.challenges))}</dd></div><div><dt>High-level design decisions</dt><dd>${escapeHtml(join(item.decisions))}</dd></div><div><dt>Public references</dt><dd>${renderReferences(item.references)}</dd></div></dl>`;
@@ -422,6 +475,7 @@ async function load() {
     renderProfile(state.data.profile);
     renderFilters();
     renderProjects();
+    renderTimeline(state.data.projects);
     renderPreviews();
     selectScenario(state.data.architectures[0]?.id);
     $("#status").textContent =
