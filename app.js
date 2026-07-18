@@ -176,9 +176,23 @@ function announce(message) {
   }, 20);
 }
 
+function renderAnimatedName(name) {
+  return [...String(name ?? "")]
+    .map((character, index) => {
+      const content = character === " " ? "&nbsp;" : escapeHtml(character);
+      if (character === " ") {
+        return `<span class="hero-letter hero-letter-space" aria-hidden="true">${content}</span>`;
+      }
+      return `<span class="hero-letter" aria-hidden="true" style="--letter-index:${index}"><span class="hero-letter-outline" aria-hidden="true">${content}</span><span class="hero-letter-face">${content}</span></span>`;
+    })
+    .join("");
+}
+
 function renderProfile(profile) {
   if (!profile) return;
-  $("#profile-name").textContent = profile.name;
+  const profileName = $("#profile-name");
+  profileName.setAttribute("aria-label", profile.name);
+  profileName.innerHTML = renderAnimatedName(profile.name);
   $("#profile-role").textContent = profile.role;
   $("#profile-headline").textContent = profile.headline;
   $("#profile-introduction").textContent = profile.introduction;
@@ -214,10 +228,11 @@ function renderExpertiseOrbit() {
     .map((item) => `<line x1="50" y1="50" x2="${item.x.toFixed(2)}" y2="${item.y.toFixed(2)}" />`)
     .join("");
   target.innerHTML = points
-    .map(
-      (item, index) =>
-        `<button class="expertise-sphere" type="button" data-expertise="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)}: ${escapeHtml(item.description)}" aria-pressed="false" style="--sphere-x:${item.x.toFixed(2)}%;--sphere-y:${item.y.toFixed(2)}%;--expertise-delay:${index * -0.45}s"><span class="expertise-sphere-surface"><strong>${escapeHtml(item.name)}</strong><span class="expertise-tooltip" role="tooltip"><strong class="expertise-tooltip-title">${escapeHtml(item.name)}</strong><span class="expertise-tooltip-description">${escapeHtml(item.description)}</span></span></span></button>`,
-    )
+    .map((item, index) => {
+      const tooltipSide =
+        item.x > 64 ? "left" : item.x < 36 ? "right" : item.y < 36 ? "bottom" : "top";
+      return `<button class="expertise-sphere" type="button" data-expertise="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)}: ${escapeHtml(item.description)}" aria-pressed="false" style="--sphere-x:${item.x.toFixed(2)}%;--sphere-y:${item.y.toFixed(2)}%;--expertise-delay:${index * -0.45}s"><span class="expertise-sphere-surface"><strong>${escapeHtml(item.name)}</strong><span class="expertise-tooltip expertise-tooltip-${tooltipSide}" role="tooltip"><strong class="expertise-tooltip-title">${escapeHtml(item.name)}</strong><span class="expertise-tooltip-description">${escapeHtml(item.description)}</span></span></span></button>`;
+    })
     .join("");
 }
 
@@ -412,7 +427,7 @@ function renderTimeline(projects) {
     .join("");
   const orderedSelfDeveloped = selfDeveloped.sort((first, second) => first._order - second._order);
   const selfDevelopedMarkup = selfDeveloped.length
-    ? `<li class="timeline-company timeline-company-self reveal" data-career-group="self-developed" style="--reveal-delay:${orderedGroups.length * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(orderedGroups.length + 1).padStart(2, "0")} / Independent practice</p><h3>${SELF_DEVELOPED_LABEL}</h3></div><span class="timeline-date">Self-directed</span></div><p class="timeline-group-note">Independent engineering patterns and platform ideas developed outside an employer context.</p><ol class="timeline-projects" aria-label="${SELF_DEVELOPED_LABEL}">${orderedSelfDeveloped
+    ? `<li class="timeline-company timeline-company-self reveal" data-career-group="self-developed" style="--reveal-delay:${orderedGroups.length * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(orderedGroups.length + 1).padStart(2, "0")} / Independent practice</p><h3>${SELF_DEVELOPED_LABEL}</h3></div><span class="timeline-date">Self-directed</span></div><p class="timeline-group-note">Independent engineering patterns developed outside an employer context.</p><ol class="timeline-projects" aria-label="${SELF_DEVELOPED_LABEL}">${orderedSelfDeveloped
         .map((project, projectIndex) => renderTimelineProject(project, projectIndex))
         .join("")}</ol></div></li>`
     : "";
