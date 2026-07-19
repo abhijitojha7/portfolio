@@ -191,17 +191,54 @@ function renderAnimatedName(name) {
     .join("");
 }
 
+function formatExperienceDuration(startMonth, now = new Date()) {
+  if (typeof startMonth !== "string" || !/^\d{4}-\d{2}$/.test(startMonth)) return "";
+  const [startYear, startMonthNumber] = startMonth.split("-").map(Number);
+  const current = now instanceof Date ? now : new Date(now);
+  if (
+    !Number.isInteger(startYear) ||
+    !Number.isInteger(startMonthNumber) ||
+    startYear < 1900 ||
+    startMonthNumber < 1 ||
+    startMonthNumber > 12 ||
+    Number.isNaN(current.getTime())
+  ) {
+    return "";
+  }
+  const months =
+    (current.getUTCFullYear() - startYear) * 12 + (current.getUTCMonth() + 1 - startMonthNumber);
+  if (months < 0) return "";
+  const years = Math.floor(months / 12);
+  const remainingMonths = months % 12;
+  const parts = [];
+  if (years) parts.push(`${years} ${years === 1 ? "year" : "years"}`);
+  if (remainingMonths)
+    parts.push(`${remainingMonths} ${remainingMonths === 1 ? "month" : "months"}`);
+  return parts.join(", ") || "less than a month";
+}
+
 function renderProfile(profile) {
   if (!profile) return;
+  const experience = formatExperienceDuration(profile.careerStartMonth);
+  const introduction = String(profile.introduction ?? "");
+  const dynamicIntroduction = experience
+    ? introduction.replace(/\b\d+\+?\s+years?\b/i, experience)
+    : introduction;
   const profileName = $("#profile-name");
   profileName.setAttribute("aria-label", profile.name);
   profileName.innerHTML = renderAnimatedName(profile.name);
   $("#profile-role").textContent = profile.role;
   $("#profile-headline").textContent = profile.headline;
-  $("#profile-introduction").textContent = profile.introduction;
+  $("#profile-introduction").textContent = dynamicIntroduction;
   $("#profile-supporting").textContent = profile.supportingCopy;
   $("#availability").textContent = profile.availability;
   $("#location").textContent = profile.location;
+  const experienceBadge = $("#experience-badge");
+  if (experienceBadge) {
+    const label = experience ? `${experience} of experience` : "Experience timeline";
+    experienceBadge.textContent = label;
+    experienceBadge.setAttribute("aria-label", label);
+  }
   $("#career-highlights").innerHTML = (profile.careerHighlights || [])
     .map((name) => `<span class="highlight-pill">${escapeHtml(name)}</span>`)
     .join("");
@@ -858,6 +895,11 @@ async function load() {
     handleHash();
   } catch (error) {
     $("#status").textContent = "Public content is temporarily unavailable.";
+    const experienceBadge = $("#experience-badge");
+    if (experienceBadge) {
+      experienceBadge.textContent = "Experience timeline";
+      experienceBadge.setAttribute("aria-label", "Experience timeline");
+    }
     console.error(error);
   }
 }
