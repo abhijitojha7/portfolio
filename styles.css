@@ -15,6 +15,7 @@
   --orange: #cf8619;
   --green: #159a6b;
   --amber: #c9871e;
+  --amber-ink: #8a5a00;
   --surface-page: #f4fbfa;
   --surface-card: #ffffff;
   --surface-elevated: #eaf6f4;
@@ -180,10 +181,22 @@ a {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke: #ffffff;
+  --letter-length: 64;
+  stroke-dasharray: 64;
+  stroke-dashoffset: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-mark-letter-draw 4.8s var(--ease) 820ms infinite;
 }
 .brand-mark-o {
   stroke-width: 3;
   stroke: var(--amber);
+  --letter-length: 66;
+  stroke-dasharray: 66;
+  stroke-dashoffset: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-mark-letter-draw 4.8s var(--ease) 980ms infinite;
 }
 .brand-mark-o-keyline {
   stroke: #ffffff;
@@ -559,27 +572,28 @@ em {
   mask-image: radial-gradient(ellipse, black 40%, transparent 72%);
 }
 .hero-ring {
+  --ring-tilt: -30deg;
   position: absolute;
   border: 1px solid rgba(83, 244, 210, 0.4);
   border-radius: 50%;
-  transform: rotate(-30deg);
+  transform: rotate(var(--ring-tilt));
   animation: orbit 14s linear infinite;
 }
 .ring-one {
   inset: 16% 8%;
 }
 .ring-two {
+  --ring-tilt: 48deg;
   inset: 27% 18%;
   border-color: rgba(77, 134, 255, 0.55);
-  transform: rotate(48deg);
   animation-duration: 10s;
   animation-direction: reverse;
 }
 .ring-three {
+  --ring-tilt: 12deg;
   inset: 38% 29%;
   border-style: dashed;
   border-color: rgba(255, 189, 114, 0.52);
-  transform: rotate(12deg);
   animation-duration: 18s;
 }
 .hero-core {
@@ -1404,7 +1418,7 @@ em {
   background-size: 30px 30px;
   mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
-.diagram svg {
+.diagram-edges {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1428,6 +1442,22 @@ em {
   opacity: 0.13;
   animation-play-state: paused;
 }
+.flow-packet {
+  --packet-color: var(--amber);
+  fill: var(--packet-color);
+  opacity: 0.74;
+  animation: packet-travel 2.8s ease-in-out var(--packet-delay, 0ms) infinite;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--packet-color) 58%, transparent));
+}
+.flow-packet.is-active {
+  --packet-color: var(--teal);
+  opacity: 1;
+  r: 2;
+}
+.flow-packet.is-dimmed {
+  opacity: 0.12;
+  animation-play-state: paused;
+}
 .diagram-node {
   position: absolute;
   z-index: 1;
@@ -1448,6 +1478,21 @@ em {
     transform 0.35s var(--ease),
     border 0.35s,
     box-shadow 0.35s;
+}
+.node-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: 0 auto 7px;
+  color: var(--teal);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.diagram-node.is-deployment .node-icon {
+  color: var(--amber-ink);
 }
 .diagram-node:hover,
 .diagram-node:focus-visible,
@@ -1630,6 +1675,54 @@ em {
   opacity: 1;
   transform: none;
 }
+.project-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.project-card > * {
+  position: relative;
+  z-index: 1;
+}
+.project-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10%;
+  width: 46%;
+  height: 4px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(8, 127, 123, 0.78) 40%,
+    rgba(36, 94, 219, 0.8) 60%,
+    transparent
+  );
+  transform: translateX(-115%) skewX(-12deg);
+}
+.project-card.reveal {
+  animation: project-card-in 680ms var(--ease) both;
+  animation-delay: var(--reveal-delay, 0ms);
+  animation-play-state: paused;
+}
+.project-card.reveal.is-visible {
+  animation-play-state: running;
+}
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-7px);
+  box-shadow:
+    0 18px 42px rgba(26, 79, 89, 0.16),
+    0 0 0 1px rgba(8, 127, 123, 0.14);
+}
+.project-card:hover::before,
+.project-card:focus-within::before {
+  opacity: 1;
+  animation: project-card-accent-sweep 900ms var(--ease) both;
+}
 .preview-dialog {
   width: min(680px, calc(100% - 32px));
   padding: 0;
@@ -1646,6 +1739,9 @@ em {
 .dialog-inner {
   position: relative;
   padding: 34px;
+}
+.preview-dialog[open] .dialog-inner {
+  animation: review-dialog-in 520ms var(--ease) both;
 }
 .dialog-close {
   position: absolute;
@@ -1738,24 +1834,70 @@ em {
   gap: 9px;
 }
 .review-section {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr);
   gap: 10px;
   min-height: 120px;
   padding: 15px;
+  overflow: hidden;
   border: 1px solid rgba(126, 213, 236, 0.13);
   border-radius: 12px;
   background: rgba(4, 22, 46, 0.4);
   opacity: 0;
-  transform: translateY(10px);
-  animation: review-in 0.55s var(--ease) forwards;
+  translate: 0 10px;
+  transform: none;
+  transition:
+    transform 220ms var(--ease),
+    box-shadow 220ms var(--ease),
+    border-color 220ms var(--ease);
+  box-shadow: 0 10px 24px rgba(26, 79, 89, 0.08);
+  animation: review-section-card-in 0.68s var(--ease) both;
   animation-delay: var(--review-delay, 0ms);
+}
+.review-section::before {
+  position: absolute;
+  inset: 0 auto 0 -42%;
+  z-index: -1;
+  width: 38%;
+  background: linear-gradient(
+    105deg,
+    transparent,
+    rgba(83, 244, 210, 0.24),
+    rgba(77, 134, 255, 0.2),
+    transparent
+  );
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: skewX(-16deg);
+}
+.review-section > * {
+  position: relative;
+  z-index: 1;
+}
+.review-section:hover,
+.review-section:focus-within {
+  border-color: rgba(8, 127, 123, 0.32);
+  box-shadow:
+    0 14px 30px rgba(26, 79, 89, 0.13),
+    0 0 0 1px rgba(36, 94, 219, 0.1);
+  transform: translateY(-3px);
+}
+.review-section:hover::before,
+.review-section:focus-within::before {
+  opacity: 1;
+  animation: review-section-accent-sweep 900ms var(--ease) both;
 }
 .review-section-number {
   color: var(--teal);
   font:
     0.65rem "DM Mono",
     monospace;
+  transform-origin: center;
+  animation: review-section-number-pulse 3.8s ease-in-out infinite;
+  animation-delay: calc(var(--review-delay, 0ms) + 680ms);
 }
 .review-section-label {
   margin: 0 0 7px;
@@ -1807,8 +1949,11 @@ em {
   border: 0;
 }
 @keyframes orbit {
+  from {
+    transform: rotate(var(--ring-tilt));
+  }
   to {
-    transform: rotate(330deg);
+    transform: rotate(calc(var(--ring-tilt) + 1turn));
   }
 }
 @keyframes hero-name-in {
@@ -1906,9 +2051,43 @@ em {
       drop-shadow(0 0 14px rgba(201, 135, 30, 0.42));
   }
 }
+@keyframes brand-mark-letter-draw {
+  0%,
+  78%,
+  100% {
+    opacity: 0.9;
+    stroke-dashoffset: 0;
+    transform: scale(1);
+  }
+  8% {
+    opacity: 0.34;
+    stroke-dashoffset: var(--letter-length);
+    transform: scale(0.94);
+  }
+  28%,
+  52% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transform: scale(1);
+  }
+  64% {
+    opacity: 0.86;
+    stroke-dashoffset: -4;
+    transform: scale(1.04);
+  }
+}
 @keyframes flow {
   to {
     stroke-dashoffset: -28;
+  }
+}
+@keyframes packet-travel {
+  0%,
+  100% {
+    r: 1.35;
+  }
+  50% {
+    r: 1.85;
   }
 }
 @keyframes pulse {
@@ -1940,6 +2119,68 @@ em {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@keyframes review-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes review-section-card-in {
+  0% {
+    opacity: 0;
+    translate: 0 14px;
+    scale: 0.985;
+  }
+  72% {
+    opacity: 1;
+    translate: 0 -2px;
+    scale: 1.004;
+  }
+  100% {
+    opacity: 1;
+    translate: none;
+    scale: 1;
+  }
+}
+@keyframes review-section-accent-sweep {
+  from {
+    transform: translateX(-135%) skewX(-16deg);
+  }
+  to {
+    transform: translateX(430%) skewX(-16deg);
+  }
+}
+@keyframes review-section-number-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+@keyframes project-card-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes project-card-accent-sweep {
+  from {
+    transform: translateX(-115%) skewX(-12deg);
+  }
+  to {
+    transform: translateX(115%) skewX(-12deg);
   }
 }
 @keyframes drift {
@@ -2111,13 +2352,61 @@ em {
     animation: none;
     opacity: 0;
   }
+  .brand-mark-a,
+  .brand-mark-o {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+    transform: none;
+  }
+  .flow-packet {
+    animation: none;
+    opacity: 0.72;
+  }
+  .flow-packet.is-active {
+    opacity: 1;
+  }
+  .flow-packet.is-dimmed {
+    opacity: 0.12;
+  }
+  .project-card.reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .project-card::before {
+    animation: none;
+    opacity: 0;
+    transform: none;
+  }
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: none;
+  }
   .timeline-company-marker span,
   .timeline-project,
   .review-hero,
   .review-section {
     opacity: 1;
+    translate: none;
+    scale: none;
     transform: none;
     animation: none;
+  }
+  .preview-dialog[open] .dialog-inner,
+  .review-section-number {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .review-section::before {
+    opacity: 0;
+    transform: none;
+    animation: none;
+  }
+  .review-section:hover,
+  .review-section:focus-within {
+    transform: none;
   }
 }
 
@@ -2251,6 +2540,14 @@ h3,
   box-shadow:
     0 0 0 4px rgba(8, 127, 123, 0.11),
     0 12px 25px rgba(26, 79, 89, 0.16);
+}
+.diagram-node.is-deployment {
+  border-style: dashed;
+  border-color: var(--color-amber);
+  background: linear-gradient(145deg, #fffdf6, #fff0cf);
+}
+.diagram-node.is-deployment .node-type {
+  color: var(--amber-ink);
 }
 .contact-card {
   background:

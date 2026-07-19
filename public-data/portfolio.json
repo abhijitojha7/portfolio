@@ -678,10 +678,10 @@
       "projectId": "public-project-06",
       "employer": "Self-developed project",
       "domain": "Enterprise modernization",
-      "overview": "Modernization work involving migration of legacy capabilities toward microservices and improved engineering workflows.",
-      "challenge": "Legacy application boundaries can constrain deployment, maintainability, and independent evolution.",
-      "solution": "This work demonstrates microservices migration and developer-assistance tooling-assisted engineering, but keeps employer context general.",
-      "architecture": "Target architecture uses decomposed services and independent delivery boundaries; the architecture is presented as a high-level flow.",
+      "overview": "An independent architecture project exploring how to evolve a legacy application into clear, independently deployable services.",
+      "challenge": "A tightly coupled application made it difficult to change, release, and scale capabilities independently.",
+      "solution": "Mapped domain boundaries, introduced explicit API contracts, and planned incremental migration seams with CI/CD guardrails.",
+      "architecture": "Bounded services behind stable APIs, with deliberate data ownership and reversible migration steps.",
       "role": "Independent architecture and engineering project",
       "dates": "Self-directed",
       "responsibilities": [
@@ -696,7 +696,7 @@
         "CI/CD"
       ],
       "impact": [
-        "Clarified service boundaries to make modernization easier to evolve and operate."
+        "Created a reusable modernization pattern for clearer ownership, safer releases, and easier future evolution."
       ],
       "decisions": [],
       "lessons": [],
@@ -710,24 +710,28 @@
       "kind": "architecture",
       "id": "public-architecture-01",
       "title": "Enterprise Archive",
-      "scenario": "Reliable imaging exchange",
-      "summary": "A guided view of a documented imaging flow, from protocol boundary through durable archive services to downstream availability.",
+      "scenario": "Modality to clinical viewer exchange",
+      "summary": "A guided imaging flow from modality and DICOM integration through PACS, Enterprise Archive, and clinical viewers, with on-premises and cloud deployment paths.",
       "nodes": [
         {
-          "id": "producer",
-          "label": "Imaging producer",
-          "purpose": "Create or submit an imaging study.",
+          "id": "modality",
+          "label": "Imaging modality",
+          "purpose": "Create and send imaging studies into the exchange workflow.",
           "responsibilities": [
             "Study creation",
-            "Transfer initiation"
+            "DICOM transfer initiation"
           ],
           "tradeoffs": [
-            "External behavior varies"
+            "Modality behavior varies by vendor"
           ],
-          "whySelected": "Keeps the external boundary explicit.",
+          "whySelected": "Makes the clinical entry boundary explicit.",
           "technologies": [
             "DICOM"
           ],
+          "position": {
+            "x": 10,
+            "y": 46
+          },
           "relatedProjects": [
             "public-project-01",
             "public-project-02"
@@ -740,21 +744,25 @@
           ]
         },
         {
-          "id": "router",
-          "label": "Protocol router",
-          "purpose": "Validate and route imaging data into archive workflows.",
+          "id": "dicom-integration",
+          "label": "DICOM integration layer",
+          "purpose": "Validate, translate, and route imaging traffic between clinical systems.",
           "responsibilities": [
-            "Validation",
-            "Routing"
+            "Protocol validation",
+            "Routing and interoperability"
           ],
           "tradeoffs": [
-            "Adds a boundary to operate"
+            "Adds an integration boundary to operate"
           ],
-          "whySelected": "Protects the core workflow from protocol variance.",
+          "whySelected": "Protects downstream workflows from protocol variance.",
           "technologies": [
             "DICOM",
             "REST APIs"
           ],
+          "position": {
+            "x": 28,
+            "y": 46
+          },
           "relatedProjects": [
             "public-project-01"
           ],
@@ -766,22 +774,58 @@
           ]
         },
         {
-          "id": "archive",
-          "label": "Archive services",
-          "purpose": "Coordinate durable storage, retrieval, and availability.",
+          "id": "pacs",
+          "label": "PACS workflow",
+          "purpose": "Coordinate study routing, prefetch, and availability for clinical workflows.",
           "responsibilities": [
-            "Workflow orchestration",
-            "Availability"
+            "Study routing",
+            "Prefetch coordination"
           ],
           "tradeoffs": [
-            "Requires clear failure handling"
+            "Requires clear availability contracts"
           ],
-          "whySelected": "Centralizes the domain responsibility without exposing implementation details.",
+          "whySelected": "Keeps the operational imaging workflow visible before durable storage.",
+          "technologies": [
+            "PACS",
+            "DICOM",
+            "REST APIs"
+          ],
+          "position": {
+            "x": 46,
+            "y": 46
+          },
+          "relatedProjects": [
+            "public-project-02",
+            "public-project-01"
+          ],
+          "relatedDecisions": [
+            "public-decision-01"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        },
+        {
+          "id": "enterprise-archive",
+          "label": "Enterprise Archive",
+          "purpose": "Coordinate durable storage, retrieval, and study availability across deployment boundaries.",
+          "responsibilities": [
+            "Archive orchestration",
+            "Durable retrieval"
+          ],
+          "tradeoffs": [
+            "Requires deliberate capacity and failure handling"
+          ],
+          "whySelected": "Makes the durable system responsibility explicit without exposing implementation details.",
           "technologies": [
             "C#",
             ".NET",
             "SQL Server"
           ],
+          "position": {
+            "x": 64,
+            "y": 46
+          },
           "relatedProjects": [
             "public-project-01",
             "public-project-03"
@@ -794,26 +838,95 @@
           ]
         },
         {
-          "id": "consumer",
-          "label": "Clinical consumer",
-          "purpose": "Make a study available to a consuming workflow.",
+          "id": "clinical-viewers",
+          "label": "Clinical viewers",
+          "purpose": "Make imaging studies available to clinicians and downstream care workflows.",
           "responsibilities": [
-            "Retrieval",
-            "Downstream hand-off"
+            "Study retrieval",
+            "Viewer hand-off"
           ],
           "tradeoffs": [
-            "Depends on availability contracts"
+            "Depends on consistent availability contracts"
           ],
-          "whySelected": "Makes the user-facing outcome visible.",
+          "whySelected": "Keeps the clinical outcome visible at the end of the flow.",
           "technologies": [
-            "REST APIs",
-            "PACS"
+            "DICOMweb",
+            "REST APIs"
           ],
+          "position": {
+            "x": 86,
+            "y": 46
+          },
           "relatedProjects": [
-            "public-project-02"
+            "public-project-02",
+            "public-project-04"
           ],
           "relatedDecisions": [
             "public-decision-03"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        },
+        {
+          "id": "on-premises",
+          "label": "On-premises deployment",
+          "type": "deployment",
+          "purpose": "Run archive capabilities within an enterprise-managed environment.",
+          "responsibilities": [
+            "Local integration",
+            "Controlled data residency"
+          ],
+          "tradeoffs": [
+            "Requires owned infrastructure capacity"
+          ],
+          "whySelected": "Represents a deployment path for established enterprise environments.",
+          "technologies": [
+            "Enterprise infrastructure",
+            "DICOM"
+          ],
+          "position": {
+            "x": 58,
+            "y": 78
+          },
+          "relatedProjects": [
+            "public-project-01",
+            "public-project-03"
+          ],
+          "relatedDecisions": [
+            "public-decision-03"
+          ],
+          "relatedNotes": [
+            "public-note-01"
+          ]
+        },
+        {
+          "id": "cloud",
+          "label": "Cloud deployment",
+          "type": "deployment",
+          "purpose": "Run archive capabilities on scalable cloud infrastructure.",
+          "responsibilities": [
+            "Elastic capacity",
+            "Managed availability"
+          ],
+          "tradeoffs": [
+            "Requires cloud operating discipline"
+          ],
+          "whySelected": "Represents a scalable deployment path for evolving workloads.",
+          "technologies": [
+            "AWS Cloud",
+            "DICOMweb"
+          ],
+          "position": {
+            "x": 72,
+            "y": 78
+          },
+          "relatedProjects": [
+            "public-project-01",
+            "public-project-04"
+          ],
+          "relatedDecisions": [
+            "public-decision-01"
           ],
           "relatedNotes": [
             "public-note-01"
@@ -822,16 +935,36 @@
       ],
       "edges": [
         [
-          "producer",
-          "router"
+          "modality",
+          "dicom-integration"
         ],
         [
-          "router",
-          "archive"
+          "dicom-integration",
+          "pacs"
         ],
         [
-          "archive",
-          "consumer"
+          "pacs",
+          "enterprise-archive"
+        ],
+        [
+          "enterprise-archive",
+          "clinical-viewers"
+        ],
+        [
+          "enterprise-archive",
+          "on-premises"
+        ],
+        [
+          "enterprise-archive",
+          "cloud"
+        ],
+        [
+          "on-premises",
+          "clinical-viewers"
+        ],
+        [
+          "cloud",
+          "clinical-viewers"
         ]
       ],
       "publicationState": "approved"

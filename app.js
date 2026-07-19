@@ -139,7 +139,8 @@ function normalizeBundle(bundle) {
         components: (record.nodes || []).map((node) => ({
           ...node,
           name: node.label,
-          type: node.id === "broker" ? "messaging" : "component",
+          type: node.type || (node.id === "broker" ? "messaging" : "component"),
+          position: node.position || null,
           rationale:
             node.whySelected || "Selected because it makes a documented responsibility visible.",
           technologies: node.technologies || [],
@@ -463,14 +464,82 @@ function renderScenarioNav() {
     .join("");
 }
 
+const NODE_ICON_MAP = Object.freeze({
+  modality:
+    '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 4h14v11H5z"/><path d="M8 19h8M12 15v4M8 8h8M8 11h5"/></svg>',
+  integration:
+    '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h6v4H4zM14 13h6v4h-6z"/><path d="M10 9h4v6M8 19h8M12 11v2"/></svg>',
+  pacs: '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg>',
+  archive:
+    '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5h14v4H5zM6 9h12v10H6zM9 13h6"/></svg>',
+  deployment:
+    '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17h10a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1A3.5 3.5 0 0 0 7 17Z"/><path d="M9 20h6"/></svg>',
+  viewer:
+    '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="12" rx="1"/><path d="M8 20h8M12 17v3"/></svg>',
+  component:
+    '<svg class="node-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9z"/></svg>',
+});
+
+function nodeIconKey(component) {
+  const id = String(component?.id || "").toLowerCase();
+  if (id === "modality") return "modality";
+  if (id.includes("dicom") || id.includes("integration")) return "integration";
+  if (id.includes("pacs")) return "pacs";
+  if (id.includes("archive")) return "archive";
+  if (component?.type === "deployment" || id.includes("deployment")) return "deployment";
+  if (id.includes("viewer")) return "viewer";
+  return "component";
+}
+
+function nodeIcon(component) {
+  return NODE_ICON_MAP[nodeIconKey(component)] || NODE_ICON_MAP.component;
+}
+
 const DIAGRAM_LAYOUT = Object.freeze({
   left: 18,
   right: 82,
   top: 28,
   bottom: 64,
 });
+const COMPACT_DIAGRAM_LAYOUT = Object.freeze({
+  left: 26,
+  right: 74,
+  top: 14,
+  bottom: 86,
+});
+const UML_PRIMARY_LANE = Object.freeze({
+  modality: { x: 10, y: 46 },
+  "dicom-integration": { x: 28, y: 46 },
+  pacs: { x: 46, y: 46 },
+  "enterprise-archive": { x: 64, y: 46 },
+  "clinical-viewers": { x: 86, y: 46 },
+});
+const UML_DEPLOYMENT_LANE = Object.freeze({
+  "on-premises": { x: 56, y: 76 },
+  cloud: { x: 72, y: 76 },
+});
+const UML_NODE_POSITIONS = Object.freeze({ ...UML_PRIMARY_LANE, ...UML_DEPLOYMENT_LANE });
+
+function isCompactDiagram() {
+  return Boolean(
+    typeof window !== "undefined" && window.matchMedia?.("(max-width: 760px)")?.matches,
+  );
+}
+
+function compactDiagramAnchor(index, count) {
+  const row = Math.floor(index / 2);
+  const rowCount = Math.ceil(count / 2);
+  const rowProgress = rowCount > 1 ? row / (rowCount - 1) : 0.5;
+  return {
+    x: index % 2 ? COMPACT_DIAGRAM_LAYOUT.right : COMPACT_DIAGRAM_LAYOUT.left,
+    y:
+      COMPACT_DIAGRAM_LAYOUT.top +
+      rowProgress * (COMPACT_DIAGRAM_LAYOUT.bottom - COMPACT_DIAGRAM_LAYOUT.top),
+  };
+}
 
 function diagramAnchor(index, count) {
+  if (isCompactDiagram()) return compactDiagramAnchor(index, count);
   const ratio = index / Math.max(1, count - 1);
   return {
     x: DIAGRAM_LAYOUT.left + ratio * (DIAGRAM_LAYOUT.right - DIAGRAM_LAYOUT.left),
@@ -478,38 +547,88 @@ function diagramAnchor(index, count) {
   };
 }
 
-function edgeGeometry(from, to, count) {
+function componentAnchor(component, index, count) {
+  if (isCompactDiagram()) return diagramAnchor(index, count);
+  const umlPosition = UML_NODE_POSITIONS[component?.id];
+  if (umlPosition) return umlPosition;
+  const position = component?.position;
+  if (position && Number.isFinite(Number(position.x)) && Number.isFinite(Number(position.y))) {
+    return {
+      x: Math.min(92, Math.max(8, Number(position.x))),
+      y: Math.min(84, Math.max(16, Number(position.y))),
+    };
+  }
+  return diagramAnchor(index, count);
+}
+
+function edgeGeometry(from, to, count, components = []) {
   if (from === undefined || to === undefined) return [];
   const fromAnchor = diagramAnchor(from, count);
   const toAnchor = diagramAnchor(to, count);
-  return [fromAnchor.x, fromAnchor.y, toAnchor.x, toAnchor.y];
+  const fromPosition = components.length
+    ? componentAnchor(components[from], from, count)
+    : fromAnchor;
+  const toPosition = components.length ? componentAnchor(components[to], to, count) : toAnchor;
+  return [fromPosition.x, fromPosition.y, toPosition.x, toPosition.y];
+}
+
+function umlEdgePath(from, to, points) {
+  const [x1, y1, x2, y2] = points;
+  const deploymentTarget = to === "on-premises" || to === "cloud";
+  const viewerTarget = to === "clinical-viewers" && from !== "enterprise-archive";
+  if (from === "enterprise-archive" && deploymentTarget) {
+    return `M ${x1} ${y1} V 62 H ${x2} V ${y2}`;
+  }
+  if (viewerTarget) {
+    return `M ${x1} ${y1} V 88 H ${x2} V ${y2}`;
+  }
+  if (y1 === y2) return `M ${x1} ${y1} H ${x2}`;
+  return `M ${x1} ${y1} L ${x2} ${y2}`;
 }
 
 function renderDiagram(scenario) {
   const diagram = $("#diagram");
   const count = scenario.components.length;
   const edges = scenario.relationships
-    .map((edge, index) => {
+    .map((edge) => {
       const fromIndex = scenario.components.findIndex((item) => item.id === edge.from);
       const toIndex = scenario.components.findIndex((item) => item.id === edge.to);
       const points = edgeGeometry(
         fromIndex < 0 ? undefined : fromIndex,
         toIndex < 0 ? undefined : toIndex,
         count,
+        scenario.components,
       );
-      return points.length ? { points, from: edge.from, to: edge.to } : null;
+      return points.length
+        ? {
+            points,
+            from: edge.from,
+            to: edge.to,
+            path: umlEdgePath(edge.from, edge.to, points),
+          }
+        : null;
     })
     .filter(Boolean);
   const lines = edges
     .map(
-      ({ points: [x1, y1, x2, y2], from, to }) =>
-        `<line class="flow-edge" data-from="${escapeHtml(from)}" data-to="${escapeHtml(to)}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`,
+      ({ from, to, path }, index) =>
+        `<path class="flow-edge" id="flow-path-${index}" data-path-id="flow-path-${index}" data-from="${escapeHtml(from)}" data-to="${escapeHtml(to)}" marker-end="url(#flow-arrow)" d="${path}" />`,
     )
     .join("");
-  diagram.innerHTML = `<svg class="diagram-edges" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="flow-gradient" x1="0" x2="1"><stop stop-color="#53f4d2"/><stop offset="1" stop-color="#4d86ff"/></linearGradient></defs>${lines}</svg>${scenario.components
+  const packetKeyframes = Object.freeze({ duration: 5.4, stagger: 0.24 });
+  const packets = edges
+    .map(({ points: [x1, y1], from, to }, index) => {
+      const packetMotion = reduceMotion?.matches
+        ? ""
+        : `<animateMotion dur="${packetKeyframes.duration}s" begin="${(index * packetKeyframes.stagger).toFixed(2)}s" repeatCount="indefinite" rotate="auto"><mpath href="#flow-path-${index}" /></animateMotion>`;
+      return `<circle class="flow-packet" data-path-id="flow-path-${index}" data-from="${escapeHtml(from)}" data-to="${escapeHtml(to)}" cx="${x1}" cy="${y1}" r="1.6" style="--packet-delay:${index * 160}ms">${packetMotion}</circle>`;
+    })
+    .join("");
+  diagram.innerHTML = `<svg class="diagram-edges" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="flow-gradient" x1="0" x2="1"><stop stop-color="#53f4d2"/><stop offset="1" stop-color="#4d86ff"/></linearGradient><marker id="flow-arrow" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 6 3 L 0 6 z" fill="#245edb" /></marker></defs>${lines}${packets}</svg>${scenario.components
     .map((component, index) => {
-      const anchor = diagramAnchor(index, count);
-      return `<button class="diagram-node" type="button" data-component="${escapeHtml(component.id)}" style="left:${anchor.x}%;top:${anchor.y}%;" aria-label="Focus ${escapeHtml(component.name)}"><span class="node-label">${escapeHtml(component.name)}</span><span class="node-type">${escapeHtml(component.type)}</span></button>`;
+      const anchor = componentAnchor(component, index, count);
+      const deploymentClass = component.type === "deployment" ? " is-deployment" : "";
+      return `<button class="diagram-node${deploymentClass}" type="button" data-component="${escapeHtml(component.id)}" data-node-type="${escapeHtml(component.type)}" style="left:${anchor.x}%;top:${anchor.y}%;" aria-label="Focus ${escapeHtml(component.name)}">${nodeIcon(component)}<span class="node-label">${escapeHtml(component.name)}</span><span class="node-type">${escapeHtml(component.type)}</span></button>`;
     })
     .join("")}`;
   $("#diagram-text").textContent = scenario.textEquivalent;
@@ -584,6 +703,12 @@ function applyFocusMode() {
     const connected = !selected || edge.dataset.from === selected || edge.dataset.to === selected;
     edge.classList.toggle("is-dimmed", !connected);
     edge.classList.toggle("is-active", Boolean(selected && connected));
+  });
+  $$(".flow-packet").forEach((packet) => {
+    const connected =
+      !selected || packet.dataset.from === selected || packet.dataset.to === selected;
+    packet.classList.toggle("is-dimmed", !connected);
+    packet.classList.toggle("is-active", Boolean(selected && connected));
   });
 }
 function clearFocus() {
