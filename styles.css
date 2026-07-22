@@ -2377,6 +2377,7 @@ em {
     font-size: clamp(3rem, 15vw, 5rem);
   }
 }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -2857,5 +2858,16 @@ h3,
   }
   .expertise-sphere:nth-child(12) {
     grid-area: 4 / 4;
+  }
+}
+
+/* Keep the company glow fully still for visitors who request reduced motion.
+   This final override follows all theme rules so decorative animation and
+   hover lift cannot be reintroduced by the cascade. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-career-highlights .highlight-pill {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
