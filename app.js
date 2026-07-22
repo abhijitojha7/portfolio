@@ -217,6 +217,22 @@ function formatExperienceDuration(startMonth, now = new Date()) {
   return parts.join(", ") || "less than a month";
 }
 
+function organizationHref(name) {
+  const highlights = state.data?.profile?.careerHighlights;
+  const entry = (Array.isArray(highlights) ? highlights : []).find((item) =>
+    typeof item === "string" ? item === name : item?.name === name,
+  );
+  const href = typeof entry === "object" && entry !== null ? entry.url : "";
+  return typeof href === "string" && href.toLowerCase().startsWith("https://") ? href : "";
+}
+
+function organizationLink(name, className) {
+  const href = organizationHref(name);
+  const classAttribute = className ? ` class="${escapeHtml(className)}"` : "";
+  if (!href) return `<span${classAttribute}>${escapeHtml(name)}</span>`;
+  return `<a${classAttribute} href="${escapeHtml(href)}" target="_blank" rel="noreferrer">${escapeHtml(name)} <span aria-hidden="true">↗</span></a>`;
+}
+
 function renderProfile(profile) {
   if (!profile) return;
   const experience = formatExperienceDuration(profile.careerStartMonth);
@@ -240,7 +256,10 @@ function renderProfile(profile) {
     experienceBadge.setAttribute("aria-label", label);
   }
   $("#career-highlights").innerHTML = (profile.careerHighlights || [])
-    .map((name) => `<span class="highlight-pill">${escapeHtml(name)}</span>`)
+    .map((entry) => {
+      const name = typeof entry === "string" ? entry : entry?.name;
+      return name ? organizationLink(name, "highlight-pill") : "";
+    })
     .join("");
   $("#value-pillars").innerHTML = (profile.valuePillars || [])
     .map(
@@ -458,7 +477,7 @@ function renderTimeline(projects) {
       const projectsForEmployer = group.projects
         .filter((project) => !project.parentProjectId || !projectIds.has(project.parentProjectId))
         .sort((first, second) => first._order - second._order);
-      return `<li class="timeline-company reveal" data-career-group="company" style="--reveal-delay:${groupIndex * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(groupIndex + 1).padStart(2, "0")} / ${COMPANY_HISTORY_LABEL}</p><h3>${escapeHtml(employer)}</h3></div><span class="timeline-date">${escapeHtml(projectsForEmployer[0]?.dates || "Project portfolio")}</span></div><ol class="timeline-projects" aria-label="Projects at ${escapeHtml(employer)}">${projectsForEmployer
+      return `<li class="timeline-company reveal" data-career-group="company" style="--reveal-delay:${groupIndex * 75}ms"><div class="timeline-company-marker" aria-hidden="true"><span></span></div><div class="timeline-company-body"><div class="timeline-company-heading"><div><p class="eyebrow">${String(groupIndex + 1).padStart(2, "0")} / ${COMPANY_HISTORY_LABEL}</p><h3>${organizationLink(employer, "timeline-company-link")}</h3></div><span class="timeline-date">${escapeHtml(projectsForEmployer[0]?.dates || "Project portfolio")}</span></div><ol class="timeline-projects" aria-label="Projects at ${escapeHtml(employer)}">${projectsForEmployer
         .map((project, projectIndex) =>
           renderTimelineProject(project, projectIndex, childrenByParent.get(project.id) || []),
         )
@@ -909,8 +928,13 @@ function loadVisitorCount() {
   if (!visitorCount) return;
 
   visitorCount.textContent = "Visitor count unavailable";
-  const endpoint = visitorCount.dataset.visitorCounterEndpoint || "";
   const counter = window.PdepVisitorCounter;
+  const href = typeof window.location?.href === "string" ? window.location.href : "";
+  if (counter?.isDemoMode?.(href) === true && typeof counter.demoCount === "function") {
+    visitorCount.textContent = `Demo visitors today: ${counter.demoCount()}`;
+    return;
+  }
+  const endpoint = visitorCount.dataset.visitorCounterEndpoint || "";
   if (!endpoint || !counter || typeof counter.fetchCount !== "function") return;
 
   Promise.resolve()

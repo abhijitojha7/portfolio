@@ -9,11 +9,26 @@
     "availability": "Open to Staff+ engineering leadership conversations",
     "location": "Bengaluru, India",
     "careerHighlights": [
-      "GE HealthCare",
-      "Maersk",
-      "Infosys",
-      "Accenture",
-      "CSM Technologies"
+      {
+        "name": "GE HealthCare",
+        "url": "https://www.gehealthcare.com/"
+      },
+      {
+        "name": "A.P. Moller - Maersk",
+        "url": "https://www.maersk.com/"
+      },
+      {
+        "name": "Infosys",
+        "url": "https://www.infosys.com/"
+      },
+      {
+        "name": "Accenture",
+        "url": "https://www.accenture.com/"
+      },
+      {
+        "name": "CSM Technologies",
+        "url": "https://www.csm.tech/"
+      }
     ],
     "valuePillars": [
       {
@@ -228,7 +243,7 @@
       "id": "public-project-07",
       "title": "Enterprise Automation Framework",
       "projectId": "public-project-07",
-      "employer": "Maersk",
+      "employer": "A.P. Moller - Maersk",
       "domain": "Logistics automation",
       "overview": "Enterprise automation framework spanning Windows, web, SAP, and mainframe workflows.",
       "challenge": "Operational processes crossed several application types and required repeatable automation rather than isolated scripts.",
@@ -265,7 +280,7 @@
       "id": "public-project-08",
       "title": "Booking Workflow Optimization",
       "projectId": "public-project-08",
-      "employer": "Maersk",
+      "employer": "A.P. Moller - Maersk",
       "domain": "Logistics",
       "overview": "Performance work for booking workflows.",
       "challenge": "Booking operations depended on data collection and processing paths that required performance improvement.",

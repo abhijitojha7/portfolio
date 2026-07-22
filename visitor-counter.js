@@ -23,6 +23,21 @@
     return Math.min(MAX_TIMEOUT_MS, Math.max(1, Math.floor(timeoutMs)));
   }
 
+  function isDemoMode(href) {
+    if (typeof href !== "string") return false;
+    try {
+      return new URL(href).searchParams.get("demoVisitors") === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function demoCount(random = Math.random) {
+    const sample = typeof random === "function" ? Number(random()) : Number.NaN;
+    const normalized = Number.isFinite(sample) ? Math.min(0.999999, Math.max(0, sample)) : 0;
+    return 24 + Math.floor(normalized * 137);
+  }
+
   async function fetchCount(endpoint, fetchImpl, timeoutMs) {
     if (!isValidEndpoint(endpoint)) return undefined;
 
@@ -60,5 +75,5 @@
     }
   }
 
-  global.PdepVisitorCounter = Object.freeze({ isValidEndpoint, fetchCount });
+  global.PdepVisitorCounter = Object.freeze({ isValidEndpoint, isDemoMode, demoCount, fetchCount });
 })(typeof window === "object" ? window : globalThis);

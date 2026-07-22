@@ -847,6 +847,23 @@ em {
   font-size: 0.75rem;
   font-weight: 700;
 }
+.highlight-pill,
+.timeline-company-link {
+  text-decoration: none;
+}
+.highlight-pill:hover,
+.highlight-pill:focus-visible,
+.timeline-company-link:hover,
+.timeline-company-link:focus-visible {
+  color: var(--blue-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.timeline-company-link span,
+.highlight-pill span {
+  color: var(--teal);
+  font-size: 0.78em;
+}
 .section-intro {
   max-width: 760px;
   margin-bottom: 48px;
