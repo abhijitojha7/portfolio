@@ -904,6 +904,29 @@ async function load() {
   }
 }
 
+function loadVisitorCount() {
+  const visitorCount = $("#visitor-count");
+  if (!visitorCount) return;
+
+  visitorCount.textContent = "Visitor count unavailable";
+  const endpoint = visitorCount.dataset.visitorCounterEndpoint || "";
+  const counter = window.PdepVisitorCounter;
+  if (!endpoint || !counter || typeof counter.fetchCount !== "function") return;
+
+  Promise.resolve()
+    .then(() => window.PdepVisitorCounter.fetchCount(endpoint))
+    .then((count) => {
+      visitorCount.textContent =
+        Number.isSafeInteger(count) && count >= 0
+          ? `Visitors today: ${count}`
+          : "Visitor count unavailable";
+    })
+    .catch(() => {
+      visitorCount.textContent = "Visitor count unavailable";
+    });
+}
+
 setupInteractions();
 renderExpertiseOrbit();
+void loadVisitorCount();
 load();

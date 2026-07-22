@@ -1676,6 +1676,13 @@ em {
 .site-footer a:hover {
   color: var(--teal);
 }
+.visitor-count {
+  display: inline-flex;
+  min-height: 1.5rem;
+  align-items: center;
+  color: var(--teal);
+  white-space: nowrap;
+}
 .loading-copy {
   color: var(--faint);
   font:
